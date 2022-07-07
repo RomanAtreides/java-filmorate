@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class UserController {
      */
 
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    @Getter
     private final Map<String, User> users = new HashMap<>();
 
     // Получение списка всех пользователей
