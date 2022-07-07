@@ -67,7 +67,7 @@ public class FilmController {
     }
 
     private boolean validate(Film film) {
-        boolean isValidate = true;
+        boolean isValid = true;
 
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Название фильма не может быть пустым!");
@@ -84,6 +84,6 @@ public class FilmController {
         if (film.getDuration() <= 0) {
             throw new RuntimeException("Продолжительность фильма должна быть положительной!");
         }
-        return isValidate;
+        return isValid;
     }
 }
