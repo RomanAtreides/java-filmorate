@@ -71,11 +71,11 @@ public class UserController {
         return user;
     }
 
-    private boolean validate(User user) {
+    public boolean validate(User user) {
         boolean isValid = true;
 
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            log.warn("Попытка добавить пользователя в неверно указанной почтой - {}", user.getEmail());
+            log.warn("Попытка добавить пользователя с неверно указанной почтой - {}", user.getEmail());
             throw new ValidationException("Не указана электронная почта!");
         }
 
@@ -84,15 +84,15 @@ public class UserController {
             throw new ValidationException("Логин указан неверно!");
         }
 
-        if (user.getName().isBlank()) {
-            log.info("Попытка добавить пользователя с пустым именем. Имя будет заменено на логин - {}",
-                    user.getLogin());
-            user.setName(user.getLogin());
-        }
-
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Попытка добавить пользователя с неверной датой рождения - {}", user.getBirthday());
             throw new ValidationException("Дата рождения указана неверно!");
+        }
+
+        if (user.getName() == null || user.getName().isBlank()) {
+            log.info("Попытка добавить пользователя с пустым именем. Имя будет заменено на логин - {}",
+                    user.getLogin());
+            user.setName(user.getLogin());
         }
         return isValid;
     }
