@@ -49,7 +49,21 @@ class FilmControllerTest {
     }
 
     @Test
-    void put() {
+    void shouldThrowExceptionIfDescriptionIsLonger200() {
+        Film film2 = new Film(
+                2,
+                "film2 description." +
+                        "Marty McFly, a 17-year-old high school student, is accidentally sent thirty years" +
+                        "into the past in a time-traveling DeLorean invented by his close friend," +
+                        "the eccentric scientist Doc Brown",
+                LocalDate.of(1986, 7, 1),
+                Duration.ofMinutes(110),
+                "film1 name"
+        );
+
+        System.out.println(film2.getDescription().length());
+        assertThrows(ValidationException.class, () -> controller.validate(film2));
+        assertTrue(film2.getDescription().length() > 200);
     }
 
     void createTestFilms() {
