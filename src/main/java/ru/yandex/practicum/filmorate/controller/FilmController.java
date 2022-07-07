@@ -53,7 +53,7 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         if (films.containsKey(film.getName())) {
-            log.warn("Попытка добавить фильм у уже существующим в библиотеке названием - {}", film.getName());
+            log.warn("Попытка добавить фильм с уже существующим в библиотеке названием - {}", film.getName());
             throw new ValidationException("Фильм с таким названием уже есть в библиотеке!");
         }
 
