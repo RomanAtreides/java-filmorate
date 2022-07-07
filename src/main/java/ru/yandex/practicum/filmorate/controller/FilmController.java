@@ -72,7 +72,7 @@ public class FilmController {
         return film;
     }
 
-    private boolean validate(Film film) {
+    public boolean validate(Film film) {
         boolean isValid = true;
 
         if (film.getName() == null || film.getName().isBlank()) {
