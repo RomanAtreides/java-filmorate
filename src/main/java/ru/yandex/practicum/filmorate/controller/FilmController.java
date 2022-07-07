@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,6 +29,8 @@ public class FilmController {
      * Используйте аннотацию @RequestBody, чтобы создать объект из тела запроса на добавление или обновление сущности.
      */
 
+    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+
     private final Map<String, Film> films = new HashMap<>();
 
     // Получение всех фильмов
@@ -48,6 +52,7 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         if (films.containsKey(film.getName())) {
+            log.warn("Попытка добавить фильм у уже существующим в библиотеке названием - {}", film.getName());
             throw new ValidationException("Фильм с таким названием уже есть в библиотеке!");
         }
 
@@ -70,18 +75,24 @@ public class FilmController {
         boolean isValid = true;
 
         if (film.getName() == null || film.getName().isBlank()) {
+            log.warn("Попытка добавить фильм с пустым именем");
             throw new ValidationException("Название фильма не может быть пустым!");
         }
 
         if (film.getDescription().length() > 200) {
+            log.warn("Попытка добавить фильм с описанием, длина которого {}, но оно не может быть больше 200 символов",
+                    film.getDescription().length());
             throw new ValidationException("Максимальная длина описания фильма — 200 символов!");
         }
 
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            log.warn("Попытка добавить фильм с датой релиза {}, но она не может быть раньше 28.12.1895",
+                    film.getReleaseDate());
             throw new ValidationException("Дата релиза фильма должна быть не раньше 28 декабря 1895 года!");
         }
 
         if (film.getDuration() <= 0) {
+            log.warn("Попытка добавить фильм с отрицательной продолжительностью - {}", film.getDuration());
             throw new RuntimeException("Продолжительность фильма должна быть положительной!");
         }
         return isValid;
