@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class FilmController {
      */
 
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    @Getter
     private final Map<String, Film> films = new HashMap<>();
 
     // Получение всех фильмов
@@ -90,7 +92,7 @@ public class FilmController {
             throw new ValidationException("Дата релиза фильма должна быть не раньше 28 декабря 1895 года!");
         }
 
-        if (film.getDuration() <= 0) {
+        if (film.getDuration().isZero() || film.getDuration().isNegative()) {
             log.warn("Попытка добавить фильм с отрицательной продолжительностью - {}", film.getDuration());
             throw new RuntimeException("Продолжительность фильма должна быть положительной!");
         }
