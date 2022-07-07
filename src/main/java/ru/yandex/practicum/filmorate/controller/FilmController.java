@@ -30,7 +30,6 @@ public class FilmController {
      */
 
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
-
     private final Map<String, Film> films = new HashMap<>();
 
     // Получение всех фильмов

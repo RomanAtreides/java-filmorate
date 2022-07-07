@@ -28,6 +28,7 @@ public class UserController {
      * Используйте аннотацию @RequestBody, чтобы создать объект из тела запроса на добавление или обновление сущности.
      */
 
+    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     private final Map<String, User> users = new HashMap<>();
 
     // Получение списка всех пользователей
@@ -49,6 +50,7 @@ public class UserController {
     @PostMapping
     public User create(@RequestBody User user) {
         if (users.containsKey(user.getEmail())) {
+            log.warn("Попытка добавить пользователя с уже существующей в базе почтой - {}", user.getEmail());
             throw new ValidationException("Такой пользователь уже зарегистрирован в системе!");
         }
 
@@ -71,18 +73,23 @@ public class UserController {
         boolean isValid = true;
 
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            log.warn("Попытка добавить пользователя в неверно указанной почтой - {}", user.getEmail());
             throw new ValidationException("Не указана электронная почта!");
         }
 
         if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+            log.warn("Попытка добавить пользователя с неверным логином - {}", user.getLogin());
             throw new ValidationException("Логин указан неверно!");
         }
 
         if (user.getName().isBlank()) {
+            log.info("Попытка добавить пользователя с пустым именем. Имя будет заменено на логин - {}",
+                    user.getLogin());
             user.setName(user.getLogin());
         }
 
         if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.warn("Попытка добавить пользователя с неверной датой рождения - {}", user.getBirthday());
             throw new ValidationException("Дата рождения указана неверно!");
         }
         return isValid;
