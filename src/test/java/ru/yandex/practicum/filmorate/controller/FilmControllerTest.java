@@ -24,30 +24,37 @@ class FilmControllerTest {
         // Фильм, имя которого совпадает с именем фильма уже добавленного в библиотеку
         Film film2 = new Film(
                 2,
+                "film1 name",
                 "film2 description",
                 LocalDate.of(1986, 7, 1),
-                Duration.ofMinutes(110),
-                "film1 name"
-                );
+                Duration.ofMinutes(110)
+        );
 
         assertThrows(ValidationException.class, () -> controller.create(film2));
     }
 
-    // todo: сделать поле name final. Лучше создать новый объект фильма
     @Test
     void shouldThrowExceptionIfNameIsNullOrBlank() {
+        // Фильм с пустым именем
         Film film2 = new Film(
                 2,
+                "",
                 "film2 description",
                 LocalDate.of(1986, 7, 1),
-                Duration.ofMinutes(110),
-                "film2 name"
+                Duration.ofMinutes(110)
         );
 
-        film2.setName(null);
+        // Фильм со значением null вместо имени
+        Film film3 = new Film(
+                3,
+                null,
+                "film3 description",
+                LocalDate.of(1987, 8, 2),
+                Duration.ofMinutes(111)
+        );
+
         assertThrows(ValidationException.class, () -> controller.validate(film2));
-        film2.setName("");
-        assertThrows(ValidationException.class, () -> controller.validate(film2));
+        assertThrows(ValidationException.class, () -> controller.validate(film3));
     }
 
     @Test
@@ -55,13 +62,13 @@ class FilmControllerTest {
         // Фильм со слишком длинным описанием
         Film film2 = new Film(
                 2,
+                "film2 name",
                 "film2 description." +
-                        "Marty McFly, a 17-year-old high school student, is accidentally sent thirty years" +
-                        "into the past in a time-traveling DeLorean invented by his close friend," +
-                        "the eccentric scientist Doc Brown",
+                "Marty McFly, a 17-year-old high school student, is accidentally sent thirty years" +
+                "into the past in a time-traveling DeLorean invented by his close friend," +
+                "the eccentric scientist Doc Brown",
                 LocalDate.of(1986, 7, 1),
-                Duration.ofMinutes(110),
-                "film2 name"
+                Duration.ofMinutes(110)
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(film2));
@@ -73,10 +80,10 @@ class FilmControllerTest {
         // Фильм с датой релиза ранее 28.12.1895
         Film film2 = new Film(
                 2,
+                "film2 name",
                 "film2 description",
                 LocalDate.of(1895, 12, 27),
-                Duration.ofMinutes(110),
-                "film2 name"
+                Duration.ofMinutes(110)
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(film2));
@@ -88,28 +95,28 @@ class FilmControllerTest {
         // Фильм с нулевой продолжительностью
         Film film2 = new Film(
                 2,
+                "film2 name",
                 "film2 description",
                 LocalDate.of(1986, 6, 6),
-                Duration.ofMinutes(0),
-                "film2 name"
+                Duration.ofMinutes(0)
         );
 
         // Фильм с отрицательной продолжительностью
         Film film3 = new Film(
                 3,
+                "film3 name",
                 "film3 description",
                 LocalDate.of(1987, 7, 7),
-                Duration.ofMinutes(-1),
-                "film3 name"
+                Duration.ofMinutes(-1)
         );
 
         // Фильм с положительной продолжительностью
         Film film4 = new Film(
                 4,
+                "film4 name",
                 "film4 description",
                 LocalDate.of(1988, 8, 8),
-                Duration.ofMinutes(1),
-                "film4 name"
+                Duration.ofMinutes(1)
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(film2));
@@ -120,10 +127,10 @@ class FilmControllerTest {
     void createTestFilms() {
         Film film1 = new Film(
                 1,
+                "film1 name",
                 "film1 description",
                 LocalDate.of(1985, 7, 3),
-                Duration.ofMinutes(116),
-                "film1 name"
+                Duration.ofMinutes(116)
         );
 
         controller.getFilms().put(film1.getName(), film1);
