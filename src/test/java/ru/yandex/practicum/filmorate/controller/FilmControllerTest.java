@@ -21,6 +21,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowExceptionIfNameAlreadyExists() {
+        // Фильм, имя которого совпадает с именем фильма уже добавленного в библиотеку
         Film film2 = new Film(
                 2,
                 "film2 description",
@@ -32,6 +33,7 @@ class FilmControllerTest {
         assertThrows(ValidationException.class, () -> controller.create(film2));
     }
 
+    // todo: сделать поле name final. Лучше создать новый объект фильма
     @Test
     void shouldThrowExceptionIfNameIsNullOrBlank() {
         Film film2 = new Film(
@@ -39,7 +41,7 @@ class FilmControllerTest {
                 "film2 description",
                 LocalDate.of(1986, 7, 1),
                 Duration.ofMinutes(110),
-                "film1 name"
+                "film2 name"
         );
 
         film2.setName(null);
@@ -50,6 +52,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowExceptionIfDescriptionIsLonger200() {
+        // Фильм со слишком длинным описанием
         Film film2 = new Film(
                 2,
                 "film2 description." +
@@ -58,16 +61,16 @@ class FilmControllerTest {
                         "the eccentric scientist Doc Brown",
                 LocalDate.of(1986, 7, 1),
                 Duration.ofMinutes(110),
-                "film1 name"
+                "film2 name"
         );
 
-        System.out.println(film2.getDescription().length());
         assertThrows(ValidationException.class, () -> controller.validate(film2));
         assertTrue(film2.getDescription().length() > 200);
     }
 
     @Test
     void shouldThrowExceptionIfReleaseDateIsBefore1895() {
+        // Фильм с датой релиза ранее 28.12.1895
         Film film2 = new Film(
                 2,
                 "film2 description",
@@ -76,7 +79,7 @@ class FilmControllerTest {
                 "film2 name"
         );
 
-        assertThrows(ValidationException.class, () -> controller.create(film2));
+        assertThrows(ValidationException.class, () -> controller.validate(film2));
         assertTrue(film2.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
     }
 
