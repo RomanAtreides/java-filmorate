@@ -53,11 +53,12 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         if (films.containsKey(film.getName())) {
-            log.warn("Попытка добавить фильм с уже существующим в библиотеке названием - {}", film.getName());
+            log.warn("Попытка добавить фильм с уже существующим в библиотеке названием - \"{}\"", film.getName());
             throw new ValidationException("Фильм с таким названием уже есть в библиотеке!");
         }
 
         if (validate(film)) {
+            log.info("Новый фильм - \"{}\" успешно добавлен в библиотеку", film.getName());
             films.put(film.getName(), film);
         }
         return film;
@@ -67,6 +68,7 @@ public class FilmController {
     @PutMapping
     public Film put(@RequestBody Film film) {
         if (validate(film)) {
+            log.info("Фильм - \"{}\" обновлён", film.getName());
             films.put(film.getName(), film);
         }
         return film;
