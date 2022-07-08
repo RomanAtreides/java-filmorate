@@ -144,7 +144,7 @@ class UserControllerTest {
                 "user2 name"
         );
 
-        controller.getUsers().put(user1.getEmail(), user1);
-        controller.getUsers().put(user2.getEmail(), user2);
+        controller.create(user1);
+        controller.create(user2);
     }
 }

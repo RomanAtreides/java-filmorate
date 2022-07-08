@@ -31,7 +31,7 @@ public class UserController {
 
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     @Getter
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private int userId = 0;
 
     private void generateUserId(User user) {
@@ -56,15 +56,17 @@ public class UserController {
     // Создание пользователя
     @PostMapping
     public User create(@RequestBody User user) {
-        if (users.containsKey(user.getEmail())) {
-            log.warn("Попытка добавить пользователя с уже существующей в базе почтой - {}", user.getEmail());
-            throw new ValidationException("Такой пользователь уже зарегистрирован в системе!");
+        for (User value : users.values()) {
+            if (value.getEmail().equals(user.getEmail())) {
+                log.warn("Попытка добавить пользователя с уже существующей в базе почтой - {}", user.getEmail());
+                throw new ValidationException("Пользователь с такой почтой уже зарегистрирован в системе!");
+            }
         }
 
         if (validate(user)) {
             generateUserId(user);
-            log.info("Пользователь с почтой - {} добавлен в базу", user.getEmail());
-            users.put(user.getEmail(), user);
+            log.info("Пользователь {} добавлен в базу", user.getName());
+            users.put(user.getId(), user);
         }
         return user;
     }
@@ -73,8 +75,8 @@ public class UserController {
     @PutMapping
     public User put(@RequestBody User user) {
         if (validate(user)) {
-            log.info("Данные пользователя с почтой - {} обновлены", user.getEmail());
-            users.put(user.getEmail(), user);
+            log.info("Данные пользователя {} обновлены", user.getName());
+            users.put(user.getId(), user);
         }
         return user;
     }
@@ -84,8 +86,8 @@ public class UserController {
         int loginLinesNumber = user.getLogin().split(" ").length;
 
         if (user.getId() < 0) {
-            log.warn("Попытка добавить пользователя с нулевым или отрицательным id - {}", user.getId());
-            throw new ValidationException("id не может быть нулевым или отрицательным!");
+            log.warn("Попытка добавить пользователя с отрицательным id - {}", user.getId());
+            throw new ValidationException("id не может быть отрицательным!");
         }
 
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
