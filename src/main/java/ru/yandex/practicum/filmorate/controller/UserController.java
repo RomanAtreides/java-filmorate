@@ -57,6 +57,7 @@ public class UserController {
         }
 
         if (validate(user)) {
+            log.info("Пользователь с почтой - {} добавлен в базу", user.getEmail());
             users.put(user.getEmail(), user);
         }
         return user;
@@ -66,6 +67,7 @@ public class UserController {
     @PutMapping
     public User put(@RequestBody User user) {
         if (validate(user)) {
+            log.info("Данные пользователя с почтой - {} обновлены", user.getEmail());
             users.put(user.getEmail(), user);
         }
         return user;
