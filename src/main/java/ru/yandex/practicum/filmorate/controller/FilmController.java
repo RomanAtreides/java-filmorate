@@ -15,20 +15,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    /*
-     * Убедитесь, что созданные контроллеры соответствуют правилам REST.
-     * Добавьте в классы-контроллеры эндпоинты с подходящим типом запроса для каждого из случаев:
-     * добавление фильма;
-     * обновление фильма;
-     * получение всех фильмов.
-     * Эндпоинты для создания и обновления данных должны также вернуть созданную или изменённую сущность.
-     */
-
-    /*
-     * Подсказка: про аннотацию @RequestBody.
-     * Используйте аннотацию @RequestBody, чтобы создать объект из тела запроса на добавление или обновление сущности.
-     */
-
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     @Getter
     private final Map<Integer, Film> films = new HashMap<>();
@@ -44,27 +30,13 @@ public class FilmController {
         return films.values();
     }
 
-    /*
-     * Проверьте данные, которые приходят в запросе на добавление нового фильма или пользователя.
-     * Эти данные должны соответствовать определённым критериям:
-     * название не может быть пустым;
-     * максимальная длина описания — 200 символов;
-     * дата релиза — не раньше 28 декабря 1895 года;
-     * продолжительность фильма должна быть положительной.
-     */
-
     // Добавление фильма
     @PostMapping
     public Film create(@RequestBody Film film) {
-        /*if (films.containsKey(film.getName())) {
-            log.warn("Попытка добавить фильм с уже существующим в библиотеке названием - \"{}\"", film.getName());
-            throw new ValidationException("Фильм с таким названием уже есть в библиотеке!");
-        }*/
-
         if (validate(film)) {
             generateFilmId(film);
             films.put(film.getId(), film);
-            log.info("Новый фильм - \"{}\" успешно добавлен в библиотеку", film.getName());
+            log.info("Новый фильм - \"{}\" добавлен в библиотеку", film.getName());
         }
         return film;
     }
@@ -93,8 +65,7 @@ public class FilmController {
         }
 
         if (film.getDescription().length() > 200) {
-            log.warn("Попытка добавить фильм с описанием, длина которого {} символа," +
-                            " но оно не может быть больше 200 символов",
+            log.warn("Попытка добавить фильм с длиной описания более 200 символов - {}",
                     film.getDescription().length());
             throw new ValidationException("Максимальная длина описания фильма — 200 символов!");
         }
@@ -102,7 +73,7 @@ public class FilmController {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.warn("Попытка добавить фильм с датой релиза {}, но она не может быть раньше 28.12.1895",
                     film.getReleaseDate());
-            throw new ValidationException("Дата релиза фильма должна быть не раньше 28 декабря 1895 года!");
+            throw new ValidationException("Дата релиза фильма должна быть не раньше 28.12.1895 года!");
         }
 
         if (film.getDuration() <= 0) {

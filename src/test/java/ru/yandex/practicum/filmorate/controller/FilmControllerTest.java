@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,19 +16,6 @@ class FilmControllerTest {
     void setUp() {
         controller = new FilmController();
         createTestFilms();
-    }
-
-    @Test
-    void shouldThrowExceptionIfNameAlreadyExists() {
-        // Фильм, имя которого совпадает с именем фильма уже добавленного в библиотеку
-        Film film3 = new Film(
-                "film1 name",
-                "film3 description",
-                LocalDate.of(1986, 7, 1),
-                110
-        );
-
-        assertThrows(ValidationException.class, () -> controller.create(film3));
     }
 
     @Test
