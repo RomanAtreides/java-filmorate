@@ -25,7 +25,8 @@ class UserControllerTest {
                 2,
                 "user1@email.com",
                 "u2",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                "user2 name"
         );
 
         assertThrows(ValidationException.class, () -> controller.create(user2));
@@ -38,7 +39,8 @@ class UserControllerTest {
                 2,
                 "",
                 "u2",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                "user2 name"
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(user2));
@@ -52,7 +54,8 @@ class UserControllerTest {
                 2,
                 "user2email.com",
                 "u2",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                "user2 name"
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(user2));
@@ -66,7 +69,8 @@ class UserControllerTest {
                 2,
                 "user2@email.com",
                 "",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                "user2 name"
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(user2));
@@ -80,7 +84,8 @@ class UserControllerTest {
                 2,
                 "user2@email.com",
                 "u 2",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                "user2 name"
         );
 
         // Пользователь с 2 пробелами в логине
@@ -88,7 +93,8 @@ class UserControllerTest {
                 3,
                 "user3@email.com",
                 "u  3",
-                LocalDate.of(1987, 7, 7)
+                LocalDate.of(1987, 7, 7),
+                "user3 name"
         );
 
         int user2LoginLinesNumber = user2.getLogin().split(" ").length;
@@ -107,7 +113,8 @@ class UserControllerTest {
                 2,
                 "user2@email.com",
                 "u2",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                "null"
         );
 
         assertNull(user2.getName());
@@ -122,10 +129,11 @@ class UserControllerTest {
                 2,
                 "user2@email.com",
                 "u2",
-                LocalDate.of(1986, 6, 6)
+                LocalDate.of(1986, 6, 6),
+                ""
         );
 
-        user2.setName("");
+        // user2.setName("");
         assertTrue(user2.getName().isBlank());
         controller.validate(user2);
         assertEquals(user2.getLogin(), user2.getName());
@@ -138,7 +146,8 @@ class UserControllerTest {
                 2,
                 "user2@email.com",
                 "u2",
-                LocalDate.now().plusDays(1)
+                LocalDate.now().plusDays(1),
+                "user2 name"
         );
 
         assertThrows(ValidationException.class, () -> controller.validate(user2));
@@ -150,7 +159,8 @@ class UserControllerTest {
                 1,
                 "user1@email.com",
                 "u1",
-                LocalDate.of(1985, 5, 5)
+                LocalDate.of(1985, 5, 5),
+                "user1 name"
         );
 
         controller.getUsers().put(user1.getEmail(), user1);
