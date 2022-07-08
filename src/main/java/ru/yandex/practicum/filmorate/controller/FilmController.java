@@ -94,8 +94,8 @@ public class FilmController {
         }
 
         if (film.getDuration().isZero() || film.getDuration().isNegative()) {
-            log.warn("Попытка добавить фильм с отрицательной продолжительностью - {}", film.getDuration());
-            throw new RuntimeException("Продолжительность фильма должна быть положительной!");
+            log.warn("Попытка добавить фильм с нулевой или отрицательной продолжительностью - {}", film.getDuration());
+            throw new ValidationException("Продолжительность фильма должна быть положительной!");
         }
         return isValid;
     }

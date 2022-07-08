@@ -80,6 +80,40 @@ class FilmControllerTest {
         assertTrue(film2.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
     }
 
+    @Test
+    void shouldThrowExceptionIfDurationIsNotPositive() {
+        // Фильм с нулевой продолжительностью
+        Film film2 = new Film(
+                2,
+                "film2 description",
+                LocalDate.of(1986, 6, 6),
+                Duration.ofMinutes(0),
+                "film2 name"
+        );
+
+        // Фильм с отрицательной продолжительностью
+        Film film3 = new Film(
+                3,
+                "film3 description",
+                LocalDate.of(1987, 7, 7),
+                Duration.ofMinutes(-1),
+                "film3 name"
+        );
+
+        // Фильм с положительной продолжительностью
+        Film film4 = new Film(
+                4,
+                "film4 description",
+                LocalDate.of(1988, 8, 8),
+                Duration.ofMinutes(1),
+                "film4 name"
+        );
+
+        assertThrows(ValidationException.class, () -> controller.validate(film2));
+        assertThrows(ValidationException.class, () -> controller.validate(film3));
+        assertDoesNotThrow(() -> controller.validate(film4));
+    }
+
     void createTestFilms() {
         Film film1 = new Film(
                 1,
