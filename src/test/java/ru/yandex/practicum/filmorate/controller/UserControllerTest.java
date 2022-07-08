@@ -19,19 +19,6 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldThrowExceptionIfEmailAlreadyExists() {
-        // Пользователь с почтой, которая уже есть в базе
-        User user3 = new User(
-                "user1@email.com",
-                "u3",
-                LocalDate.of(1986, 6, 6),
-                "user3 name"
-        );
-
-        assertThrows(ValidationException.class, () -> controller.create(user3));
-    }
-
-    @Test
     void shouldThrowExceptionIfEmailIsBlank() {
         // Пользователь с пустой почтой
         User user3 = new User(
