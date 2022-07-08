@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -21,6 +20,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionIfEmailAlreadyExists() {
+        // Пользователь с почтой, которая уже есть в базе
         User user2 = new User(
                 2,
                 "user1@email.com",
@@ -33,6 +33,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionIfEmailIsBlank() {
+        // Пользователь с пустой почтой
         User user2 = new User(
                 2,
                 "",
@@ -46,9 +47,10 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionIfEmailNotContainsAtSymbol() {
+        // Пользователь с почтой, которая не содержит символ @
         User user2 = new User(
                 2,
-                "user1email.com",
+                "user2email.com",
                 "u2",
                 LocalDate.of(1986, 6, 6)
         );
@@ -59,9 +61,10 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionIfLoginIsBlank() {
+        // Пользователь с пустым логином
         User user2 = new User(
                 2,
-                "user1@email.com",
+                "user2@email.com",
                 "",
                 LocalDate.of(1986, 6, 6)
         );
@@ -99,9 +102,10 @@ class UserControllerTest {
 
     @Test
     void shouldReplaceNameWithLoginIfNameIsNull() {
+        // Пользователь со значением null вместо имени
         User user2 = new User(
                 2,
-                "user1@email.com",
+                "user2@email.com",
                 "u2",
                 LocalDate.of(1986, 6, 6)
         );
@@ -113,9 +117,10 @@ class UserControllerTest {
 
     @Test
     void shouldReplaceNameWithLoginIfNameIsBlank() {
+        // Пользователь с пустым именем
         User user2 = new User(
                 2,
-                "user1@email.com",
+                "user2@email.com",
                 "u2",
                 LocalDate.of(1986, 6, 6)
         );
@@ -128,9 +133,10 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionIfBirthdayIsAfterNow() {
+        // Пользователь с датой рождения, которая позже сегодняшнего дня
         User user2 = new User(
                 2,
-                "user1@email.com",
+                "user2@email.com",
                 "u2",
                 LocalDate.now().plusDays(1)
         );
