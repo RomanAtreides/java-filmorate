@@ -33,6 +33,11 @@ public class FilmController {
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     @Getter
     private final Map<String, Film> films = new HashMap<>();
+    private int filmId = 0;
+
+    private void generateFilmId(Film film) {
+        film.setId(++filmId);
+    }
 
     // Получение всех фильмов
     @GetMapping
@@ -58,6 +63,7 @@ public class FilmController {
         }
 
         if (validate(film)) {
+            generateFilmId(film);
             log.info("Новый фильм - \"{}\" успешно добавлен в библиотеку", film.getName());
             films.put(film.getName(), film);
         }

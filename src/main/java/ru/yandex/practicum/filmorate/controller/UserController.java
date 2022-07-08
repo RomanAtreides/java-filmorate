@@ -32,6 +32,11 @@ public class UserController {
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     @Getter
     private final Map<String, User> users = new HashMap<>();
+    private int userId = 0;
+
+    private void generateUserId(User user) {
+        user.setId(++userId);
+    }
 
     // Получение списка всех пользователей
     @GetMapping
@@ -57,6 +62,7 @@ public class UserController {
         }
 
         if (validate(user)) {
+            generateUserId(user);
             log.info("Пользователь с почтой - {} добавлен в базу", user.getEmail());
             users.put(user.getEmail(), user);
         }
@@ -92,7 +98,7 @@ public class UserController {
             throw new ValidationException("Дата рождения указана неверно!");
         }
 
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (user.getName().isBlank()) {
             log.info("Попытка добавить пользователя с пустым именем. Имя будет заменено на логин - {}",
                     user.getLogin());
             user.setName(user.getLogin());

@@ -21,147 +21,130 @@ class UserControllerTest {
     @Test
     void shouldThrowExceptionIfEmailAlreadyExists() {
         // Пользователь с почтой, которая уже есть в базе
-        User user2 = new User(
-                2,
+        User user3 = new User(
                 "user1@email.com",
-                "u2",
+                "u3",
                 LocalDate.of(1986, 6, 6),
-                "user2 name"
+                "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> controller.create(user2));
+        assertThrows(ValidationException.class, () -> controller.create(user3));
     }
 
     @Test
     void shouldThrowExceptionIfEmailIsBlank() {
         // Пользователь с пустой почтой
-        User user2 = new User(
-                2,
+        User user3 = new User(
                 "",
-                "u2",
+                "u3",
                 LocalDate.of(1986, 6, 6),
-                "user2 name"
+                "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> controller.validate(user2));
-        assertTrue(user2.getEmail().isBlank());
+        assertThrows(ValidationException.class, () -> controller.create(user3));
+        assertTrue(user3.getEmail().isBlank());
     }
 
     @Test
     void shouldThrowExceptionIfEmailNotContainsAtSymbol() {
         // Пользователь с почтой, которая не содержит символ @
-        User user2 = new User(
-                2,
-                "user2email.com",
-                "u2",
+        User user3 = new User(
+                "user3email.com",
+                "u3",
                 LocalDate.of(1986, 6, 6),
-                "user2 name"
+                "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> controller.validate(user2));
-        assertFalse(user2.getEmail().contains("@"));
+        assertThrows(ValidationException.class, () -> controller.create(user3));
+        assertFalse(user3.getEmail().contains("@"));
     }
 
     @Test
     void shouldThrowExceptionIfLoginIsBlank() {
         // Пользователь с пустым логином
-        User user2 = new User(
-                2,
-                "user2@email.com",
+        User user3 = new User(
+                "user3@email.com",
                 "",
                 LocalDate.of(1986, 6, 6),
-                "user2 name"
+                "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> controller.validate(user2));
-        assertTrue(user2.getLogin().isBlank());
+        assertThrows(ValidationException.class, () -> controller.create(user3));
+        assertTrue(user3.getLogin().isBlank());
     }
 
     @Test
     void shouldThrowExceptionIfLoginContainsSpaces() {
         // Пользователь с 1 пробелом в логине
-        User user2 = new User(
-                2,
-                "user2@email.com",
-                "u 2",
-                LocalDate.of(1986, 6, 6),
-                "user2 name"
-        );
-
-        // Пользователь с 2 пробелами в логине
         User user3 = new User(
-                3,
                 "user3@email.com",
-                "u  3",
-                LocalDate.of(1987, 7, 7),
+                "u 3",
+                LocalDate.of(1986, 6, 6),
                 "user3 name"
         );
 
-        int user2LoginLinesNumber = user2.getLogin().split(" ").length;
-        int user3LoginLinesNumber = user3.getLogin().split(" ").length;
-
-        assertTrue(user2LoginLinesNumber > 1);
-        assertTrue(user3LoginLinesNumber > 1);
-        assertThrows(ValidationException.class, () -> controller.validate(user2));
-        assertThrows(ValidationException.class, () -> controller.validate(user3));
-    }
-
-    @Test
-    void shouldReplaceNameWithLoginIfNameIsNull() {
-        // Пользователь со значением null вместо имени
-        User user2 = new User(
-                2,
-                "user2@email.com",
-                "u2",
-                LocalDate.of(1986, 6, 6),
-                null
+        // Пользователь с 2 пробелами в логине
+        User user4 = new User(
+                "user4@email.com",
+                "u  4",
+                LocalDate.of(1987, 7, 7),
+                "user4 name"
         );
 
-        assertNull(user2.getName());
-        controller.validate(user2);
-        assertEquals(user2.getLogin(), user2.getName());
+        int user3LoginLinesNumber = user3.getLogin().split(" ").length;
+        int user4LoginLinesNumber = user4.getLogin().split(" ").length;
+
+        assertTrue(user3LoginLinesNumber > 1);
+        assertTrue(user4LoginLinesNumber > 1);
+        assertThrows(ValidationException.class, () -> controller.create(user3));
+        assertThrows(ValidationException.class, () -> controller.create(user4));
     }
 
     @Test
     void shouldReplaceNameWithLoginIfNameIsBlank() {
         // Пользователь с пустым именем
-        User user2 = new User(
-                2,
-                "user2@email.com",
-                "u2",
+        User user3 = new User(
+                "user3@email.com",
+                "u3",
                 LocalDate.of(1986, 6, 6),
                 ""
         );
 
-        assertTrue(user2.getName().isBlank());
-        controller.validate(user2);
-        assertEquals(user2.getLogin(), user2.getName());
+        assertTrue(user3.getName().isBlank());
+        controller.create(user3);
+        assertEquals(user3.getLogin(), user3.getName());
     }
 
     @Test
     void shouldThrowExceptionIfBirthdayIsAfterNow() {
         // Пользователь с датой рождения, которая позже сегодняшнего дня
-        User user2 = new User(
-                2,
-                "user2@email.com",
-                "u2",
+        User user3 = new User(
+                "user3@email.com",
+                "u3",
                 LocalDate.now().plusDays(1),
-                "user2 name"
+                "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> controller.validate(user2));
-        assertTrue(user2.getBirthday().isAfter(LocalDate.now()));
+        assertThrows(ValidationException.class, () -> controller.create(user3));
+        assertTrue(user3.getBirthday().isAfter(LocalDate.now()));
     }
 
     private void createTestUsers() {
         User user1 = new User(
-                1,
                 "user1@email.com",
                 "u1",
-                LocalDate.of(1985, 5, 5),
+                LocalDate.of(1984, 4, 4),
                 "user1 name"
         );
 
+        User user2 = new User(
+                "user2@email.com",
+                "u2",
+                LocalDate.of(1985, 5, 5),
+                "user2 name"
+        );
+
         controller.getUsers().put(user1.getEmail(), user1);
+        controller.getUsers().put(user2.getEmail(), user2);
     }
 }
