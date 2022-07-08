@@ -83,6 +83,11 @@ public class UserController {
         boolean isValid = true;
         int loginLinesNumber = user.getLogin().split(" ").length;
 
+        if (user.getId() < 0) {
+            log.warn("Попытка добавить пользователя с нулевым или отрицательным id - {}", user.getId());
+            throw new ValidationException("id не может быть нулевым или отрицательным!");
+        }
+
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.warn("Попытка добавить пользователя с неверно указанной почтой - {}", user.getEmail());
             throw new ValidationException("Не указана электронная почта!");
