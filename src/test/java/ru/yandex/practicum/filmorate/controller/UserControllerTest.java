@@ -114,7 +114,7 @@ class UserControllerTest {
                 "user2@email.com",
                 "u2",
                 LocalDate.of(1986, 6, 6),
-                "null"
+                null
         );
 
         assertNull(user2.getName());
@@ -133,7 +133,6 @@ class UserControllerTest {
                 ""
         );
 
-        // user2.setName("");
         assertTrue(user2.getName().isBlank());
         controller.validate(user2);
         assertEquals(user2.getLogin(), user2.getName());
