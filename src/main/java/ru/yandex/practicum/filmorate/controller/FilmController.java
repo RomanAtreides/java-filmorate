@@ -31,7 +31,7 @@ public class FilmController {
 
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     @Getter
-    private final Map<String, Film> films = new HashMap<>();
+    private final Map<Integer, Film> films = new HashMap<>();
     private int filmId = 0;
 
     private void generateFilmId(Film film) {
@@ -56,15 +56,15 @@ public class FilmController {
     // Добавление фильма
     @PostMapping
     public Film create(@RequestBody Film film) {
-        if (films.containsKey(film.getName())) {
+        /*if (films.containsKey(film.getName())) {
             log.warn("Попытка добавить фильм с уже существующим в библиотеке названием - \"{}\"", film.getName());
             throw new ValidationException("Фильм с таким названием уже есть в библиотеке!");
-        }
+        }*/
 
         if (validate(film)) {
             generateFilmId(film);
+            films.put(film.getId(), film);
             log.info("Новый фильм - \"{}\" успешно добавлен в библиотеку", film.getName());
-            films.put(film.getName(), film);
         }
         return film;
     }
@@ -73,14 +73,19 @@ public class FilmController {
     @PutMapping
     public Film put(@RequestBody Film film) {
         if (validate(film)) {
+            films.put(film.getId(), film);
             log.info("Фильм - \"{}\" обновлён", film.getName());
-            films.put(film.getName(), film);
         }
         return film;
     }
 
     public boolean validate(Film film) {
         boolean isValid = true;
+
+        if (film.getId() < 0) {
+            log.warn("Попытка добавить фильм с отрицательным id {}", film.getId());
+            throw new ValidationException("id не может быть отрицательным!");
+        }
 
         if (film.getName() == null || film.getName().isBlank()) {
             log.warn("Попытка добавить фильм с пустым именем");
@@ -100,7 +105,7 @@ public class FilmController {
             throw new ValidationException("Дата релиза фильма должна быть не раньше 28 декабря 1895 года!");
         }
 
-        if (film.getDuration().isZero() || film.getDuration().isNegative()) {
+        if (film.getDuration() <= 0) {
             log.warn("Попытка добавить фильм с нулевой или отрицательной продолжительностью - {}", film.getDuration());
             throw new ValidationException("Продолжительность фильма должна быть положительной!");
         }

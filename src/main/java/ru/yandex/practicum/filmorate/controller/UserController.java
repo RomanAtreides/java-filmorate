@@ -86,7 +86,7 @@ public class UserController {
         int loginLinesNumber = user.getLogin().split(" ").length;
 
         if (user.getId() < 0) {
-            log.warn("Попытка добавить пользователя с отрицательным id - {}", user.getId());
+            log.warn("Попытка добавить пользователя с отрицательным id {}", user.getId());
             throw new ValidationException("id не может быть отрицательным!");
         }
 

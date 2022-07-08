@@ -26,7 +26,7 @@ class FilmControllerTest {
                 "film1 name",
                 "film3 description",
                 LocalDate.of(1986, 7, 1),
-                Duration.ofMinutes(110)
+                110
         );
 
         assertThrows(ValidationException.class, () -> controller.create(film3));
@@ -39,7 +39,7 @@ class FilmControllerTest {
                 "",
                 "film3 description",
                 LocalDate.of(1986, 7, 1),
-                Duration.ofMinutes(110)
+                110
         );
 
         // Фильм со значением null вместо имени
@@ -47,7 +47,7 @@ class FilmControllerTest {
                 null,
                 "film4 description",
                 LocalDate.of(1987, 8, 2),
-                Duration.ofMinutes(111)
+                111
         );
 
         assertThrows(ValidationException.class, () -> controller.create(film3));
@@ -64,7 +64,7 @@ class FilmControllerTest {
                 "into the past in a time-traveling DeLorean invented by his close friend," +
                 "the eccentric scientist Doc Brown",
                 LocalDate.of(1986, 7, 1),
-                Duration.ofMinutes(110)
+                110
         );
 
         assertTrue(film3.getDescription().length() > 200);
@@ -78,7 +78,7 @@ class FilmControllerTest {
                 "film3 name",
                 "film3 description",
                 LocalDate.of(1895, 12, 27),
-                Duration.ofMinutes(110)
+                110
         );
 
         assertTrue(film3.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
@@ -92,7 +92,7 @@ class FilmControllerTest {
                 "film3 name",
                 "film3 description",
                 LocalDate.of(1986, 6, 6),
-                Duration.ofMinutes(0)
+                0
         );
 
         // Фильм с отрицательной продолжительностью
@@ -100,7 +100,7 @@ class FilmControllerTest {
                 "film4 name",
                 "film4 description",
                 LocalDate.of(1987, 7, 7),
-                Duration.ofMinutes(-1)
+                -1
         );
 
         // Фильм с положительной продолжительностью
@@ -108,7 +108,7 @@ class FilmControllerTest {
                 "film5 name",
                 "film5 description",
                 LocalDate.of(1988, 8, 8),
-                Duration.ofMinutes(1)
+                1
         );
 
         assertThrows(ValidationException.class, () -> controller.create(film3));
@@ -121,14 +121,14 @@ class FilmControllerTest {
                 "film1 name",
                 "film1 description",
                 LocalDate.of(1985, 7, 3),
-                Duration.ofMinutes(116)
+                116
         );
 
         Film film2 = new Film(
                 "film2 name",
                 "film2 description",
                 LocalDate.of(1988, 1, 7),
-                Duration.ofMinutes(118)
+                118
         );
 
         controller.create(film1);
