@@ -66,6 +66,20 @@ class FilmControllerTest {
         assertTrue(film2.getDescription().length() > 200);
     }
 
+    @Test
+    void shouldThrowExceptionIfReleaseDateIsBefore1895() {
+        Film film2 = new Film(
+                2,
+                "film2 description",
+                LocalDate.of(1895, 12, 27),
+                Duration.ofMinutes(110),
+                "film2 name"
+        );
+
+        assertThrows(ValidationException.class, () -> controller.create(film2));
+        assertTrue(film2.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
+    }
+
     void createTestFilms() {
         Film film1 = new Film(
                 1,
