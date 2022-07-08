@@ -75,13 +75,14 @@ public class UserController {
 
     public boolean validate(User user) {
         boolean isValid = true;
+        int loginLinesNumber = user.getLogin().split(" ").length;
 
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.warn("Попытка добавить пользователя с неверно указанной почтой - {}", user.getEmail());
             throw new ValidationException("Не указана электронная почта!");
         }
 
-        if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        if (user.getLogin().isBlank() || loginLinesNumber > 1) {
             log.warn("Попытка добавить пользователя с неверным логином - {}", user.getLogin());
             throw new ValidationException("Логин указан неверно!");
         }

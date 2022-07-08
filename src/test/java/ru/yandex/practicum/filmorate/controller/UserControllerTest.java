@@ -72,15 +72,29 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionIfLoginContainsSpaces() {
+        // Пользователь с 1 пробелом в логине
         User user2 = new User(
                 2,
-                "user1@email.com",
+                "user2@email.com",
                 "u 2",
                 LocalDate.of(1986, 6, 6)
         );
 
+        // Пользователь с 2 пробелами в логине
+        User user3 = new User(
+                3,
+                "user3@email.com",
+                "u  3",
+                LocalDate.of(1987, 7, 7)
+        );
+
+        int user2LoginLinesNumber = user2.getLogin().split(" ").length;
+        int user3LoginLinesNumber = user3.getLogin().split(" ").length;
+
+        assertTrue(user2LoginLinesNumber > 1);
+        assertTrue(user3LoginLinesNumber > 1);
         assertThrows(ValidationException.class, () -> controller.validate(user2));
-        assertTrue(user2.getLogin().contains(" "));
+        assertThrows(ValidationException.class, () -> controller.validate(user3));
     }
 
     @Test
