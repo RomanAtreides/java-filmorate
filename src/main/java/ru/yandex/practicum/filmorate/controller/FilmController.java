@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -56,29 +57,35 @@ public class FilmController {
 
         if (film.getId() < 0) {
             log.warn("Попытка добавить фильм с отрицательным id {}", film.getId());
-            throw new ValidationException("id не может быть отрицательным!");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "id не может быть отрицательным!");
         }
 
         if (film.getName() == null || film.getName().isBlank()) {
             log.warn("Попытка добавить фильм с пустым именем");
-            throw new ValidationException("Название фильма не может быть пустым!");
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Название фильма не может быть пустым!");
         }
 
         if (film.getDescription().length() > 200) {
             log.warn("Попытка добавить фильм с длиной описания более 200 символов - {}",
                     film.getDescription().length());
-            throw new ValidationException("Максимальная длина описания фильма — 200 символов!");
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Длина описания фильма должна быть не более 200 символов!");
         }
 
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.warn("Попытка добавить фильм с датой релиза {}, но она не может быть раньше 28.12.1895",
                     film.getReleaseDate());
-            throw new ValidationException("Дата релиза фильма должна быть не раньше 28.12.1895 года!");
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Дата релиза фильма должна быть не раньше 28.12.1895 года!");
         }
 
         if (film.getDuration() <= 0) {
-            log.warn("Попытка добавить фильм с нулевой или отрицательной продолжительностью - {}", film.getDuration());
-            throw new ValidationException("Продолжительность фильма должна быть положительной!");
+            log.warn("Попытка добавить фильм с нулевой или отрицательной продолжительностью - {}",
+                    film.getDuration());
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Продолжительность фильма должна быть положительной!");
         }
         return isValid;
     }

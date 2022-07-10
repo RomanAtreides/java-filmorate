@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -57,22 +58,26 @@ public class UserController {
 
         if (user.getId() < 0) {
             log.warn("Попытка добавить пользователя с отрицательным id {}", user.getId());
-            throw new ValidationException("id не может быть отрицательным!");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "id не может быть отрицательным!");
         }
 
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.warn("Попытка добавить пользователя с неверно указанной почтой - {}", user.getEmail());
-            throw new ValidationException("Не указана электронная почта!");
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Не указана электронная почта!");
         }
 
         if (user.getLogin().isBlank() || loginLinesNumber > 1) {
             log.warn("Попытка добавить пользователя с неверным логином - {}", user.getLogin());
-            throw new ValidationException("Логин указан неверно!");
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Логин указан неверно!");
         }
 
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Попытка добавить пользователя с неверной датой рождения - {}", user.getBirthday());
-            throw new ValidationException("Дата рождения указана неверно!");
+            throw new ValidationException(HttpStatus.BAD_REQUEST,
+                    "Дата рождения указана неверно!");
         }
 
         if (user.getName().isBlank()) {
