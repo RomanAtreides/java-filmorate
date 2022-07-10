@@ -42,13 +42,15 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowExceptionIfDescriptionIsLonger200() {
+        final String TOO_LONG_FILM_DESCRIPTION = "film3 description: Marty McFly," +
+                "a 17-year-old high school student, is accidentally sent thirty years" +
+                "into the past in a time-traveling DeLorean invented by his close friend," +
+                "the eccentric scientist Doc Brown";
+
         // Фильм со слишком длинным описанием
         Film film3 = new Film(
                 "film3 name",
-                "film3 description." +
-                "Marty McFly, a 17-year-old high school student, is accidentally sent thirty years" +
-                "into the past in a time-traveling DeLorean invented by his close friend," +
-                "the eccentric scientist Doc Brown",
+                TOO_LONG_FILM_DESCRIPTION,
                 LocalDate.of(1986, 7, 1),
                 110
         );
