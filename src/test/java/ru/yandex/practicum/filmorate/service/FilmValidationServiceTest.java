@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -9,8 +10,9 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FilmControllerTest {
+class FilmValidationServiceTest {
     FilmController controller;
+    FilmValidationService filmValidationService = new FilmValidationService();
 
     @BeforeEach
     void setUp() {
@@ -36,13 +38,13 @@ class FilmControllerTest {
                 111
         );
 
-        assertThrows(ValidationException.class, () -> controller.create(film3));
-        assertThrows(ValidationException.class, () -> controller.create(film4));
+        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmValidationService.validate(film4));
     }
 
     @Test
     void shouldThrowExceptionIfDescriptionIsLonger200() {
-        final String TOO_LONG_FILM_DESCRIPTION = "film3 description: Marty McFly," +
+        final String tooLongFilmDescription = "film3 description: Marty McFly," +
                 "a 17-year-old high school student, is accidentally sent thirty years" +
                 "into the past in a time-traveling DeLorean invented by his close friend," +
                 "the eccentric scientist Doc Brown";
@@ -50,13 +52,13 @@ class FilmControllerTest {
         // Фильм со слишком длинным описанием
         Film film3 = new Film(
                 "film3 name",
-                TOO_LONG_FILM_DESCRIPTION,
+                tooLongFilmDescription,
                 LocalDate.of(1986, 7, 1),
                 110
         );
 
         assertTrue(film3.getDescription().length() > 200);
-        assertThrows(ValidationException.class, () -> controller.create(film3));
+        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
     }
 
     @Test
@@ -70,7 +72,7 @@ class FilmControllerTest {
         );
 
         assertTrue(film3.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
-        assertThrows(ValidationException.class, () -> controller.create(film3));
+        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
     }
 
     @Test
@@ -99,9 +101,9 @@ class FilmControllerTest {
                 1
         );
 
-        assertThrows(ValidationException.class, () -> controller.create(film3));
-        assertThrows(ValidationException.class, () -> controller.create(film4));
-        assertDoesNotThrow(() -> controller.create(film5));
+        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmValidationService.validate(film4));
+        assertDoesNotThrow(() -> filmValidationService.validate(film5));
     }
 
     void createTestFilms() {
