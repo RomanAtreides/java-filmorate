@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 @RestControllerAdvice("ru.yandex.practicum")
 public class ErrorHandler {
     @ExceptionHandler
-    //@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleValidationException(final ValidationException exception) {
         return new ErrorResponse("Ошибка валидации!", exception.getMessage());
     }
