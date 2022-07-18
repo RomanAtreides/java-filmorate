@@ -1,7 +1,14 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.Collection;
+
+@Slf4j
 @Service
 public class FilmService {
     /*
@@ -21,4 +28,31 @@ public class FilmService {
      * @Service не отличается по поведению, но обозначает более узкий спектр классов — такие,
      * которые содержат в себе бизнес-логику и, как правило, не хранят состояние.
      */
+
+    private final FilmStorage filmStorage;
+    private int filmId = 0;
+
+    @Autowired
+    public FilmService(FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
+    }
+
+    private void generateFilmId(Film film) {
+        film.setId(++filmId);
+    }
+
+    public Collection<Film> findAll() {
+        return filmStorage.findAll();
+    }
+
+    public void create(Film film) {
+        generateFilmId(film);
+        filmStorage.create(film);
+        log.info("Новый фильм - \"{}\" добавлен в библиотеку", film.getName());
+    }
+
+    public void put(Film film) {
+        filmStorage.put(film);
+        log.info("Фильм - \"{}\" обновлён", film.getName());
+    }
 }

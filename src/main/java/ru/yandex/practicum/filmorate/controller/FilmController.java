@@ -1,16 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.FilmValidationService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
@@ -27,38 +24,35 @@ public class FilmController {
      * Сервисы должны быть внедрены в соответствующие контроллеры.
      */
 
-    @Getter
-    private final Map<Integer, Film> films = new HashMap<>();
-    private final FilmValidationService filmValidationService = new FilmValidationService();
-    private int filmId = 0;
+    private final FilmValidationService filmValidationService;
+    private final FilmService filmService;
 
-    private void generateFilmId(Film film) {
-        film.setId(++filmId);
+    @Autowired
+    public FilmController(FilmValidationService filmValidationService, FilmService filmService) {
+        this.filmValidationService = filmValidationService;
+        this.filmService = filmService;
     }
 
     // Получение всех фильмов
     @GetMapping
     public Collection<Film> findAll() {
-        return films.values();
+        return filmService.findAll();
     }
 
-    // Добавление фильма
+    // Добавление нового фильма
     @PostMapping
     public Film create(@RequestBody Film film) {
         if (filmValidationService.validate(film)) {
-            generateFilmId(film);
-            films.put(film.getId(), film);
-            log.info("Новый фильм - \"{}\" добавлен в библиотеку", film.getName());
+            filmService.create(film);
         }
         return film;
     }
 
-    // Обновление фильма
+    // Обновление существующего в базе фильма
     @PutMapping
     public Film put(@RequestBody Film film) {
         if (filmValidationService.validate(film)) {
-            films.put(film.getId(), film);
-            log.info("Фильм - \"{}\" обновлён", film.getName());
+            filmService.put(film);
         }
         return film;
     }
