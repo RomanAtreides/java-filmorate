@@ -11,6 +11,8 @@ public interface FilmStorage {
      * в которых будут определены методы добавления, удаления и модификации объектов.
      */
 
+    Film findFilmById(Integer filmId);
+
     Collection<Film> findAll();
 
     void create(Film film);

@@ -11,6 +11,8 @@ public interface UserStorage {
      * в которых будут определены методы добавления, удаления и модификации объектов.
      */
 
+    User findUserById(Integer userId);
+
     Collection<User> findAll();
 
     void create(User user);

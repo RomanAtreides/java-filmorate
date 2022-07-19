@@ -22,6 +22,11 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
 
     @Override
+    public User findUserById(Integer userId) {
+        return users.get(userId);
+    }
+
+    @Override
     public Collection<User> findAll() {
         return users.values();
     }

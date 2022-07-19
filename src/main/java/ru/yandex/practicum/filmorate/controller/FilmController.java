@@ -33,6 +33,12 @@ public class FilmController {
         this.filmService = filmService;
     }
 
+    // Получение фильма по идентификатору
+    @GetMapping("/{filmId}")
+    public Film findFilmById(@PathVariable Integer filmId) {
+        return filmService.findFilmById(filmId);
+    }
+
     // Получение списка всех фильмов
     @GetMapping
     public Collection<Film> findAll() {

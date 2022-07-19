@@ -41,6 +41,10 @@ public class FilmService {
         film.setId(++filmId);
     }
 
+    public Film findFilmById(Integer filmId) {
+        return filmStorage.findFilmById(filmId);
+    }
+
     public Collection<Film> findAll() {
         return filmStorage.findAll();
     }

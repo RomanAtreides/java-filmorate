@@ -43,6 +43,10 @@ public class UserService {
         user.setId(++userId);
     }
 
+    public User findUserById(Integer userId) {
+        return userStorage.findUserById(userId);
+    }
+
     public Collection<User> findAll() {
         return userStorage.findAll();
     }

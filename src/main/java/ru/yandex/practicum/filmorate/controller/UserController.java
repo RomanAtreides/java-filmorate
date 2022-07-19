@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.UserValidationService;
@@ -29,6 +30,12 @@ public class UserController {
     public UserController(UserValidationService userValidationService, UserService userService) {
         this.userValidationService = userValidationService;
         this.userService = userService;
+    }
+
+    // Получение пользователя по идентификатору
+    @GetMapping("/{userId}")
+    public User findUserById(@PathVariable Integer userId) {
+        return userService.findUserById(userId);
     }
 
     // Получение списка всех пользователей
