@@ -26,7 +26,7 @@ public class FilmValidationService {
         }
 
         if (film.getName() == null || film.getName().isBlank()) {
-            log.warn("Попытка добавить фильм с пустым именем");
+            log.warn("Попытка добавить фильм с пустым названием");
             throw new ValidationException(HttpStatus.BAD_REQUEST,
                     "Название фильма не может быть пустым!");
         }

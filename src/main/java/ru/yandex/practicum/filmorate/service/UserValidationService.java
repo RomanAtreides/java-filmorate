@@ -46,7 +46,7 @@ public class UserValidationService {
         }
 
         if (user.getName().isBlank()) {
-            log.info("Попытка добавить пользователя с пустым именем. Имя будет заменено на логин \"{}\"",
+            log.info("Попытка добавить пользователя с пустым именем. В качестве имени будет установлен логин \"{}\"",
                     user.getLogin());
             user.setName(user.getLogin());
         }

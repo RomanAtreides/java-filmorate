@@ -52,11 +52,11 @@ public class FilmService {
     public void create(Film film) {
         generateFilmId(film);
         filmStorage.create(film);
-        log.info("Новый фильм - \"{}\" добавлен в библиотеку", film.getName());
+        log.info("Новый фильм \"{}\" добавлен в библиотеку", film.getName());
     }
 
     public void put(Film film) {
         filmStorage.put(film);
-        log.info("Фильм - \"{}\" обновлён", film.getName());
+        log.info("Фильм \"{}\" обновлён", film.getName());
     }
 }
