@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 @Slf4j
 @Service
@@ -43,7 +44,7 @@ public class UserService {
         user.setId(++userId);
     }
 
-    public User findUserById(Integer userId) {
+    public User findUserById(Long userId) {
         return userStorage.findUserById(userId);
     }
 
@@ -60,5 +61,21 @@ public class UserService {
     public void put(User user) {
         userStorage.put(user);
         log.info("Данные пользователя \"{}\" обновлены", user.getName());
+    }
+
+    //todo: Добавление в друзья
+    public void addFriend(Long userId, Long friendId) {
+        User user = userStorage.findUserById(userId);
+        User friend = userStorage.findUserById(friendId);
+
+        if (user.getFriends() == null) {
+            user.setFriends(new LinkedHashSet<>());
+        }
+        user.getFriends().add(friendId);
+
+        if (friend.getFriends() == null) {
+            friend.setFriends(new LinkedHashSet<>());
+        }
+        friend.getFriends().add(userId);
     }
 }

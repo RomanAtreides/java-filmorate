@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class User {
@@ -16,9 +17,10 @@ public class User {
      * Таким же образом можно обеспечить условие «один пользователь — один лайк» для оценки фильмов.
      */
 
-    private int id;
+    private long id;
     private final String email;
     private final String login;
     private final LocalDate birthday;
     private String name;
+    private Set<Long> friends;
 }

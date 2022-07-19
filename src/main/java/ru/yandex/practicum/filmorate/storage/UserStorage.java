@@ -11,7 +11,7 @@ public interface UserStorage {
      * в которых будут определены методы добавления, удаления и модификации объектов.
      */
 
-    User findUserById(Integer userId);
+    User findUserById(Long userId);
 
     Collection<User> findAll();
 

@@ -33,7 +33,7 @@ public class UserController {
 
     // Получение пользователя по идентификатору
     @GetMapping("/{userId}")
-    public User findUserById(@PathVariable Integer userId) {
+    public User findUserById(@PathVariable Long userId) {
         User user = userService.findUserById(userId);
 
         userValidationService.validate(user);
@@ -62,5 +62,12 @@ public class UserController {
             userService.put(user);
         }
         return user;
+    }
+
+    // Добавление в список друзей
+    @PutMapping("/{userId}/friends/{friendId}")
+    public User addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+        userService.addFriend(userId, friendId);
+        return userService.findUserById(friendId);
     }
 }

@@ -19,10 +19,10 @@ public class InMemoryUserStorage implements UserStorage {
      */
 
     @Getter
-    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
 
     @Override
-    public User findUserById(Integer userId) {
+    public User findUserById(Long userId) {
         return users.get(userId);
     }
 
