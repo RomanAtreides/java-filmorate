@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -13,12 +14,17 @@ import java.time.LocalDate;
 public class UserValidationService {
     public boolean validate(User user) {
         boolean isValid = true;
+
+        if (user == null) {
+            log.warn("Попытка получить пользователя по несуществующему id");
+            throw new UserNotFoundException("Пользователь с таким id не найден!");
+        }
+
         int loginLinesNumber = user.getLogin().split(" ").length;
 
         if (user.getId() < 0) {
             log.warn("Попытка добавить пользователя с отрицательным id ({})", user.getId());
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "id не может быть отрицательным!");
+            throw new UserNotFoundException("id не может быть отрицательным!");
         }
 
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {

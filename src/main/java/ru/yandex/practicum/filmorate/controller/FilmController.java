@@ -36,7 +36,10 @@ public class FilmController {
     // Получение фильма по идентификатору
     @GetMapping("/{filmId}")
     public Film findFilmById(@PathVariable Integer filmId) {
-        return filmService.findFilmById(filmId);
+        Film film = filmService.findFilmById(filmId);
+
+        filmValidationService.validate(film);
+        return film;
     }
 
     // Получение списка всех фильмов

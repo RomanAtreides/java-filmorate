@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -14,10 +15,14 @@ public class FilmValidationService {
     public boolean validate(Film film) {
         boolean isValid = true;
 
+        if (film == null) {
+            log.warn("Попытка получить фильм по несуществующему id");
+            throw new FilmNotFoundException("Фильм с таким id не найден!");
+        }
+
         if (film.getId() < 0) {
             log.warn("Попытка добавить фильм с отрицательным id ({})", film.getId());
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "id не может быть отрицательным!");
+            throw new FilmNotFoundException("id не может быть отрицательным!");
         }
 
         if (film.getName() == null || film.getName().isBlank()) {

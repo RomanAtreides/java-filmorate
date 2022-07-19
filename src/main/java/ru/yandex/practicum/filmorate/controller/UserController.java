@@ -35,7 +35,10 @@ public class UserController {
     // Получение пользователя по идентификатору
     @GetMapping("/{userId}")
     public User findUserById(@PathVariable Integer userId) {
-        return userService.findUserById(userId);
+        User user = userService.findUserById(userId);
+
+        userValidationService.validate(user);
+        return user;
     }
 
     // Получение списка всех пользователей
