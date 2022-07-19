@@ -1,16 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.UserValidationService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -27,38 +23,34 @@ public class UserController {
      * Сервисы должны быть внедрены в соответствующие контроллеры.
      */
 
-    @Getter
-    private final Map<Integer, User> users = new HashMap<>();
-    private final UserValidationService userValidationService = new UserValidationService();
-    private int userId = 0;
+    private final UserValidationService userValidationService;
+    private final UserService userService;
 
-    private void generateUserId(User user) {
-        user.setId(++userId);
+    public UserController(UserValidationService userValidationService, UserService userService) {
+        this.userValidationService = userValidationService;
+        this.userService = userService;
     }
 
     // Получение списка всех пользователей
     @GetMapping
     public Collection<User> findAll() {
-        return users.values();
+        return userService.findAll();
     }
 
     // Создание пользователя
     @PostMapping
     public User create(@RequestBody User user) {
         if (userValidationService.validate(user)) {
-            generateUserId(user);
-            users.put(user.getId(), user);
-            log.info("Пользователь {} добавлен в базу", user.getName());
+            userService.create(user);
         }
         return user;
     }
 
-    // Обновление пользователя
+    // Обновление существующего в базе пользователя
     @PutMapping
     public User put(@RequestBody User user) {
         if (userValidationService.validate(user)) {
-            users.put(user.getId(), user);
-            log.info("Данные пользователя {} обновлены", user.getName());
+            userService.put(user);
         }
         return user;
     }

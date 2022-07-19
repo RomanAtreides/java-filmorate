@@ -1,7 +1,14 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.Collection;
+
+@Slf4j
 @Service
 public class UserService {
     /*
@@ -23,4 +30,31 @@ public class UserService {
      * @Service не отличается по поведению, но обозначает более узкий спектр классов — такие,
      * которые содержат в себе бизнес-логику и, как правило, не хранят состояние.
      */
+
+    private final UserStorage userStorage;
+    private int userId = 0;
+
+    @Autowired
+    public UserService(UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
+
+    private void generateUserId(User user) {
+        user.setId(++userId);
+    }
+
+    public Collection<User> findAll() {
+        return userStorage.findAll();
+    }
+
+    public void create(User user) {
+        generateUserId(user);
+        userStorage.create(user);
+        log.info("Пользователь \"{}\" добавлен в базу", user.getName());
+    }
+
+    public void put(User user) {
+        userStorage.put(user);
+        log.info("Данные пользователя \"{}\" обновлены", user.getName());
+    }
 }

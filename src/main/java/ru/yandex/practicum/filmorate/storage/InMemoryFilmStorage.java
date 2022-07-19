@@ -21,14 +21,17 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Getter
     private final Map<Integer, Film> films = new HashMap<>();
 
+    @Override
     public Collection<Film> findAll() {
         return films.values();
     }
 
+    @Override
     public void create(Film film) {
         films.put(film.getId(), film);
     }
 
+    @Override
     public void put(Film film) {
         films.put(film.getId(), film);
     }

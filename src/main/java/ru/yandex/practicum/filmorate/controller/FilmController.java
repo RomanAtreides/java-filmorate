@@ -33,7 +33,7 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    // Получение всех фильмов
+    // Получение списка всех фильмов
     @GetMapping
     public Collection<Film> findAll() {
         return filmService.findAll();

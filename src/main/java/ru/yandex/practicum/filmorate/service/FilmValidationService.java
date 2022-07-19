@@ -15,7 +15,7 @@ public class FilmValidationService {
         boolean isValid = true;
 
         if (film.getId() < 0) {
-            log.warn("Попытка добавить фильм с отрицательным id {}", film.getId());
+            log.warn("Попытка добавить фильм с отрицательным id ({})", film.getId());
             throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "id не может быть отрицательным!");
         }
@@ -27,7 +27,7 @@ public class FilmValidationService {
         }
 
         if (film.getDescription().length() > 200) {
-            log.warn("Попытка добавить фильм с длиной описания более 200 символов - {}",
+            log.warn("Попытка добавить фильм с длиной описания более 200 символов ({})",
                     film.getDescription().length());
             throw new ValidationException(HttpStatus.BAD_REQUEST,
                     "Длина описания фильма должна быть не более 200 символов!");
@@ -41,7 +41,7 @@ public class FilmValidationService {
         }
 
         if (film.getDuration() <= 0) {
-            log.warn("Попытка добавить фильм с нулевой или отрицательной продолжительностью - {}",
+            log.warn("Попытка добавить фильм с нулевой или отрицательной продолжительностью ({})",
                     film.getDuration());
             throw new ValidationException(HttpStatus.BAD_REQUEST,
                     "Продолжительность фильма должна быть положительной!");
