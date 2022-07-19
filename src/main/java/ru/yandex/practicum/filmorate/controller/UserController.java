@@ -67,7 +67,12 @@ public class UserController {
     // Добавление в список друзей
     @PutMapping("/{userId}/friends/{friendId}")
     public User addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
-        userService.addFriend(userId, friendId);
+        User user = userService.findUserById(userId);
+        User friend = userService.findUserById(friendId);
+
+        if (userValidationService.validate(user) && userValidationService.validate(friend)) {
+            userService.addFriend(user, friend);
+        }
         return userService.findUserById(friendId);
     }
 }

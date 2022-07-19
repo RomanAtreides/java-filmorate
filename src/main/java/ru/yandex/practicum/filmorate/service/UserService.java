@@ -63,19 +63,15 @@ public class UserService {
         log.info("Данные пользователя \"{}\" обновлены", user.getName());
     }
 
-    //todo: Добавление в друзья
-    public void addFriend(Long userId, Long friendId) {
-        User user = userStorage.findUserById(userId);
-        User friend = userStorage.findUserById(friendId);
-
+    public void addFriend(User user, User friend) {
         if (user.getFriends() == null) {
             user.setFriends(new LinkedHashSet<>());
         }
-        user.getFriends().add(friendId);
+        user.getFriends().add(friend.getId());
 
         if (friend.getFriends() == null) {
             friend.setFriends(new LinkedHashSet<>());
         }
-        friend.getFriends().add(userId);
+        friend.getFriends().add(user.getId());
     }
 }
