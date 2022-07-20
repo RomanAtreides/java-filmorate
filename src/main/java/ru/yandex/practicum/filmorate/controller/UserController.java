@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.UserValidationService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RestController
@@ -73,6 +74,35 @@ public class UserController {
         if (userValidationService.validate(user) && userValidationService.validate(friend)) {
             userService.addFriend(user, friend);
         }
-        return userService.findUserById(friendId);
+        return friend;
+    }
+
+    // Удаление из друзей
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public User removeFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+        User user = userService.findUserById(userId);
+        User friend = userService.findUserById(friendId);
+
+        if (userValidationService.validate(user) && userValidationService.validate(friend)) {
+            userService.removeFriend(user, friend);
+        }
+        return friend;
+    }
+
+    // Получение списка друзей пользователя
+    @GetMapping("/{userId}/friends")
+    public Collection<User> findFriends(@PathVariable Long userId) {
+        User user = userService.findUserById(userId);
+
+        userValidationService.validate(user);
+        return userService.findFriends(userId);
+    }
+
+    //todo:
+    // список друзей, общих с другим пользователем
+    // GET /users/{id}/friends/common/{otherId}
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public Collection<User> friendsList(@PathVariable Long userId, @PathVariable Long otherId) {
+        return new ArrayList<>();
     }
 }

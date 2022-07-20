@@ -3,11 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -73,5 +75,23 @@ public class UserService {
             friend.setFriends(new LinkedHashSet<>());
         }
         friend.getFriends().add(user.getId());
+    }
+
+    public void removeFriend(User user, User friend) {
+        Set<Long> userFriends = user.getFriends();
+        Set<Long> friendFriends = friend.getFriends();
+
+        boolean isNotFriends = userFriends == null || !userFriends.contains(friend.getId()) &&
+                friendFriends == null || !friendFriends.contains(user.getId());
+
+        if (isNotFriends) {
+            throw new UserNotFoundException("У пользователя нет такого друга!");
+        }
+        userFriends.remove(friend.getId());
+        friendFriends.remove(user.getId());
+    }
+
+    public Collection<User> findFriends(Long userId) {
+        return userStorage.findFriends(userId);
     }
 }

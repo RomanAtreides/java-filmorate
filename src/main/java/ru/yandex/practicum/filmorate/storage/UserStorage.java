@@ -18,4 +18,6 @@ public interface UserStorage {
     void create(User user);
 
     void put(User user);
+
+    Collection<User> findFriends(Long userId);
 }

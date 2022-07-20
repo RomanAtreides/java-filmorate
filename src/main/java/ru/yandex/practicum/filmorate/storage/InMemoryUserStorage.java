@@ -4,9 +4,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -39,5 +37,19 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void put(User user) {
         users.put(user.getId(), user);
+    }
+
+    //todo:
+    @Override
+    public Collection<User> findFriends(Long userId) {
+        User user = users.get(userId);
+        List<User> userFriends = new ArrayList<>();
+
+        for (Long friendId : user.getFriends()) {
+            if (users.containsKey(userId)) {
+                userFriends.add(users.get(friendId));
+            }
+        }
+        return userFriends;
     }
 }
