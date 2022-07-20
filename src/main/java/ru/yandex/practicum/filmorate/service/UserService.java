@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -93,5 +94,9 @@ public class UserService {
 
     public Collection<User> findUserFriends(Long userId) {
         return userStorage.findUserFriends(userId);
+    }
+
+    public List<User> findCommonFriends(User user, User other) {
+        return userStorage.findCommonFriends(user, other);
     }
 }

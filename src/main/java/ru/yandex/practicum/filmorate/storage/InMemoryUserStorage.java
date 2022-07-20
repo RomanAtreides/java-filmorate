@@ -39,7 +39,6 @@ public class InMemoryUserStorage implements UserStorage {
         users.put(user.getId(), user);
     }
 
-    //todo:
     @Override
     public Collection<User> findUserFriends(Long userId) {
         User user = users.get(userId);
@@ -51,5 +50,10 @@ public class InMemoryUserStorage implements UserStorage {
             }
         }
         return userFriends;
+    }
+
+    @Override
+    public List<User> findCommonFriends(User user, User other) {
+        return null;
     }
 }

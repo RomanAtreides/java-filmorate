@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.service.UserValidationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -101,12 +102,12 @@ public class UserController {
     //todo:
     // список друзей, общих с другим пользователем
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public Collection<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+    public List<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
         User user = userService.findUserById(userId);
         User other = userService.findUserById(otherId);
 
         if (userValidationService.validate(user) && userValidationService.validate(other)) {
-            userService.removeFriend(user, other);
+            userService.findCommonFriends(user, other);
         }
         return new ArrayList<>();
     }

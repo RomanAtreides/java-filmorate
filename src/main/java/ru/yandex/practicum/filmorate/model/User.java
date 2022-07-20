@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class User {
     private final String email;
     private final String login;
     private final LocalDate birthday;
+    @NonNull
     private String name;
     private Set<Long> friends;
 }
