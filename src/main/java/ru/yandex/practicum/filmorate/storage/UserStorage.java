@@ -19,5 +19,5 @@ public interface UserStorage {
 
     void put(User user);
 
-    Collection<User> findFriends(Long userId);
+    Collection<User> findUserFriends(Long userId);
 }

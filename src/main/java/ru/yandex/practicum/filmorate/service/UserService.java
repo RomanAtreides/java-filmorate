@@ -91,7 +91,7 @@ public class UserService {
         friendFriends.remove(user.getId());
     }
 
-    public Collection<User> findFriends(Long userId) {
-        return userStorage.findFriends(userId);
+    public Collection<User> findUserFriends(Long userId) {
+        return userStorage.findUserFriends(userId);
     }
 }

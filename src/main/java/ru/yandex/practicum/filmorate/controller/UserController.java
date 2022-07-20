@@ -91,18 +91,23 @@ public class UserController {
 
     // Получение списка друзей пользователя
     @GetMapping("/{userId}/friends")
-    public Collection<User> findFriends(@PathVariable Long userId) {
+    public Collection<User> findUserFriends(@PathVariable Long userId) {
         User user = userService.findUserById(userId);
 
         userValidationService.validate(user);
-        return userService.findFriends(userId);
+        return userService.findUserFriends(userId);
     }
 
     //todo:
     // список друзей, общих с другим пользователем
-    // GET /users/{id}/friends/common/{otherId}
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public Collection<User> friendsList(@PathVariable Long userId, @PathVariable Long otherId) {
+    public Collection<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+        User user = userService.findUserById(userId);
+        User other = userService.findUserById(otherId);
+
+        if (userValidationService.validate(user) && userValidationService.validate(other)) {
+            userService.removeFriend(user, other);
+        }
         return new ArrayList<>();
     }
 }
