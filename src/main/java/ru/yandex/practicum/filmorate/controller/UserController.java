@@ -104,10 +104,8 @@ public class UserController {
         User user = userService.findUserById(userId);
         User other = userService.findUserById(otherId);
 
-        if (userValidationService.validate(user) && userValidationService.validate(other)) {
-            return userService.findCommonFriends(user, other);
-        } else {
-            return new ArrayList<>();
-        }
+        userValidationService.validate(user);
+        userValidationService.validate(other);
+        return userService.findCommonFriends(user, other);
     }
 }
