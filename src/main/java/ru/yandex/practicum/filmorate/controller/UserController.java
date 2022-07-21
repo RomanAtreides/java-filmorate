@@ -79,9 +79,9 @@ public class UserController {
         User user = userService.findUserById(userId);
         User friend = userService.findUserById(friendId);
 
-        if (userValidationService.validate(user) && userValidationService.validate(friend)) {
-            userService.removeFriend(user, friend);
-        }
+        userValidationService.validate(user);
+        userValidationService.validate(friend);
+        userService.removeFriend(user, friend);
         return friend;
     }
 
