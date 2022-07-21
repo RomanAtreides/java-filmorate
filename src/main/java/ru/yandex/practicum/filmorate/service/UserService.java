@@ -7,10 +7,7 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -97,6 +94,19 @@ public class UserService {
     }
 
     public List<User> findCommonFriends(User user, User other) {
-        return userStorage.findCommonFriends(user, other);
+        List<User> commonFriends = new ArrayList<>();
+        Set<Long> userFriends = user.getFriends();
+        Set<Long> otherFriends = other.getFriends();
+
+        if (userFriends == null || otherFriends == null) {
+            return commonFriends;
+        }
+
+        for (Long userFriend : userFriends) {
+            if (otherFriends.contains(userFriend)) {
+                commonFriends.add(userStorage.getUsers().get(userFriend));
+            }
+        }
+        return commonFriends;
     }
 }

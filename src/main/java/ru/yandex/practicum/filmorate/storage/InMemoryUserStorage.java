@@ -50,22 +50,4 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return userFriends;
     }
-
-    @Override
-    public List<User> findCommonFriends(User user, User other) {
-        List<User> commonFriends = new ArrayList<>();
-        Set<Long> userFriends = user.getFriends();
-        Set<Long> otherFriends = other.getFriends();
-
-        if (userFriends == null || otherFriends == null) {
-            return commonFriends;
-        }
-        
-        for (Long userFriend : userFriends) {
-            if (otherFriends.contains(userFriend)) {
-                commonFriends.add(users.get(userFriend));
-            }
-        }
-        return commonFriends;
-    }
 }
