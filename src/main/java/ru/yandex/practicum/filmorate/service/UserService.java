@@ -52,15 +52,15 @@ public class UserService {
         return userStorage.findAll();
     }
 
-    public void create(User user) {
+    public User create(User user) {
         generateUserId(user);
-        userStorage.create(user);
         log.info("Пользователь \"{}\" добавлен в базу", user.getName());
+        return userStorage.put(user);
     }
 
-    public void put(User user) {
-        userStorage.put(user);
+    public User put(User user) {
         log.info("Данные пользователя \"{}\" обновлены", user.getName());
+        return userStorage.put(user);
     }
 
     public void addFriend(User user, User friend) {

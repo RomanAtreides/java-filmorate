@@ -50,19 +50,15 @@ public class UserController {
     // Создание пользователя
     @PostMapping
     public User create(@RequestBody User user) {
-        if (userValidationService.validate(user)) {
-            userService.create(user);
-        }
-        return user;
+        userValidationService.validate(user);
+        return userService.create(user);
     }
 
     // Обновление существующего в базе пользователя
     @PutMapping
     public User put(@RequestBody User user) {
-        if (userValidationService.validate(user)) {
-            userService.put(user);
-        }
-        return user;
+        userValidationService.validate(user);
+         return userService.put(user);
     }
 
     // Добавление в список друзей

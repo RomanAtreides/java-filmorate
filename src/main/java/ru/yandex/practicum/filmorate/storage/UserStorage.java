@@ -19,9 +19,7 @@ public interface UserStorage {
 
     Collection<User> findAll();
 
-    void create(User user);
-
-    void put(User user);
+    User put(User user);
 
     List<User> findUserFriends(User user);
 }
