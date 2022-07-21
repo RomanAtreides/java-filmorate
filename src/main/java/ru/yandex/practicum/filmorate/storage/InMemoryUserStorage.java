@@ -40,16 +40,4 @@ public class InMemoryUserStorage implements UserStorage {
         users.put(user.getId(), user);
         return user;
     }
-
-    @Override
-    public List<User> findUserFriends(User user) {
-        List<User> userFriends = new ArrayList<>();
-
-        for (Long friendId : user.getFriends()) {
-            if (users.containsKey(user.getId())) {
-                userFriends.add(users.get(friendId));
-            }
-        }
-        return userFriends;
-    }
 }

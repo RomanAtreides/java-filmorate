@@ -90,7 +90,16 @@ public class UserService {
     }
 
     public List<User> findUserFriends(User user) {
-        return userStorage.findUserFriends(user);
+        List<User> userFriends = new ArrayList<>();
+        Map<Long, User> users = userStorage.getUsers();
+
+        for (Long friendId : user.getFriends()) {
+            if (users.containsKey(user.getId())) {
+                userFriends.add(users.get(friendId));
+            }
+        }
+
+        return userFriends;
     }
 
     public List<User> findCommonFriends(User user, User other) {
