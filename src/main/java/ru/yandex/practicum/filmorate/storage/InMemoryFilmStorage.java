@@ -4,9 +4,8 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -39,5 +38,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void put(Film film) {
         films.put(film.getId(), film);
+    }
+
+    @Override
+    public List<Film> findPopularFilms(Long count) {
+        List<Film> popularFilms = new ArrayList<>(films.values());
+        //todo: отсортировать список по лайкам
+        return popularFilms.stream().limit(count).collect(Collectors.toList());
     }
 }

@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.FilmValidationService;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -64,5 +65,12 @@ public class FilmController {
             filmService.put(film);
         }
         return film;
+    }
+
+    //GET /films/popular?count={count}
+    // Получение указанного количества популярных фильмов
+    @GetMapping("/popular")
+    public List<Film> findPopularFilms(@RequestParam(required = false) Long count) {
+        return filmService.findPopularFilms(count);
     }
 }

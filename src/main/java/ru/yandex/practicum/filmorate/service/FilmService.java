@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -58,5 +59,12 @@ public class FilmService {
     public void put(Film film) {
         filmStorage.put(film);
         log.info("Фильм \"{}\" обновлён", film.getName());
+    }
+
+    public List<Film> findPopularFilms(Long count) {
+        if (count == null) {
+            count = 10L;
+        }
+        return filmStorage.findPopularFilms(count);
     }
 }
