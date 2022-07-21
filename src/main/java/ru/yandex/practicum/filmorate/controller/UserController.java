@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.UserValidationService;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -92,13 +91,14 @@ public class UserController {
 
     // Получение списка друзей пользователя
     @GetMapping("/{userId}/friends")
-    public Collection<User> findUserFriends(@PathVariable Long userId) {
+    public List<User> findUserFriends(@PathVariable Long userId) {
         User user = userService.findUserById(userId);
 
         userValidationService.validate(user);
-        return userService.findUserFriends(userId);
+        return userService.findUserFriends(user);
     }
 
+    // Получение списка общих друзей 2 пользователей
     @GetMapping("/{userId}/friends/common/{otherId}")
     public List<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
         User user = userService.findUserById(userId);

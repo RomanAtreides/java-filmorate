@@ -20,7 +20,7 @@ public interface UserStorage {
 
     void put(User user);
 
-    Collection<User> findUserFriends(Long userId);
+    List<User> findUserFriends(User user);
 
     List<User> findCommonFriends(User user, User other);
 }

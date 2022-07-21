@@ -40,12 +40,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> findUserFriends(Long userId) {
+    public List<User> findUserFriends(User user) {
         List<User> userFriends = new ArrayList<>();
-        User user = users.get(userId);
 
         for (Long friendId : user.getFriends()) {
-            if (users.containsKey(userId)) {
+            if (users.containsKey(user.getId())) {
                 userFriends.add(users.get(friendId));
             }
         }
