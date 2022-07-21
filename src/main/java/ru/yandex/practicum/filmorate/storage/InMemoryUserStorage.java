@@ -41,8 +41,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Collection<User> findUserFriends(Long userId) {
-        User user = users.get(userId);
         List<User> userFriends = new ArrayList<>();
+        User user = users.get(userId);
 
         for (Long friendId : user.getFriends()) {
             if (users.containsKey(userId)) {
@@ -54,6 +54,19 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> findCommonFriends(User user, User other) {
-        return null;
+        List<User> commonFriends = new ArrayList<>();
+        Set<Long> userFriends = user.getFriends();
+        Set<Long> otherFriends = other.getFriends();
+
+        if (userFriends == null || otherFriends == null) {
+            return commonFriends;
+        }
+        
+        for (Long userFriend : userFriends) {
+            if (otherFriends.contains(userFriend)) {
+                commonFriends.add(users.get(userFriend));
+            }
+        }
+        return commonFriends;
     }
 }

@@ -99,16 +99,15 @@ public class UserController {
         return userService.findUserFriends(userId);
     }
 
-    //todo:
-    // список друзей, общих с другим пользователем
     @GetMapping("/{userId}/friends/common/{otherId}")
     public List<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
         User user = userService.findUserById(userId);
         User other = userService.findUserById(otherId);
 
         if (userValidationService.validate(user) && userValidationService.validate(other)) {
-            userService.findCommonFriends(user, other);
+            return userService.findCommonFriends(user, other);
+        } else {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 }
