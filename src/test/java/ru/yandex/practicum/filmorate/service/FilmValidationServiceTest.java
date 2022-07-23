@@ -16,14 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmValidationServiceTest {
     FilmController controller;
-    FilmValidationService filmValidationService = new FilmValidationService();
     FilmStorage filmStorage = new InMemoryFilmStorage();
     UserStorage userStorage = new InMemoryUserStorage();
     FilmService filmService = new FilmService(filmStorage, userStorage);
 
     @BeforeEach
     void setUp() {
-        controller = new FilmController(filmValidationService, filmService);
+        controller = new FilmController(filmService);
         createTestFilms();
     }
 
@@ -45,8 +44,8 @@ class FilmValidationServiceTest {
                 111
         );
 
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film4));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film4));
     }
 
     @Test
@@ -65,7 +64,7 @@ class FilmValidationServiceTest {
         );
 
         assertTrue(film3.getDescription().length() > 200);
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
     }
 
     @Test
@@ -79,7 +78,7 @@ class FilmValidationServiceTest {
         );
 
         assertTrue(film3.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
     }
 
     @Test
@@ -108,9 +107,9 @@ class FilmValidationServiceTest {
                 1
         );
 
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film4));
-        assertDoesNotThrow(() -> filmValidationService.validate(film5));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film4));
+        assertDoesNotThrow(() -> filmService.validate(film5));
     }
 
     void createTestFilms() {
