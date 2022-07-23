@@ -94,7 +94,6 @@ public class UserService {
                 userFriends.add(users.get(friendId));
             }
         }
-
         return userFriends;
     }
 
@@ -102,10 +101,6 @@ public class UserService {
         List<User> commonFriends = new ArrayList<>();
         Set<Long> userFriends = user.getFriends();
         Set<Long> otherFriends = other.getFriends();
-
-        if (userFriends == null || otherFriends == null) {
-            return commonFriends;
-        }
 
         for (Long userFriend : userFriends) {
             if (otherFriends.contains(userFriend)) {
