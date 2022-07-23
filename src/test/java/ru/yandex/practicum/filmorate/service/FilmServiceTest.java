@@ -19,10 +19,11 @@ class FilmServiceTest {
     FilmStorage filmStorage = new InMemoryFilmStorage();
     UserStorage userStorage = new InMemoryUserStorage();
     FilmService filmService = new FilmService(filmStorage, userStorage);
+    UserService userService = new UserService(userStorage);
 
     @BeforeEach
     void setUp() {
-        controller = new FilmController(filmService);
+        controller = new FilmController(filmService, userService);
         createTestFilms();
     }
 

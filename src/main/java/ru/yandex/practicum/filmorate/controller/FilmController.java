@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,10 +26,12 @@ public class FilmController {
      */
 
     private final FilmService filmService;
+    private final UserService userService;
 
     @Autowired
-    public FilmController(FilmService filmService) {
+    public FilmController(FilmService filmService, UserService userService) {
         this.filmService = filmService;
+        this.userService = userService;
     }
 
     // Получение фильма по идентификатору
@@ -82,7 +85,7 @@ public class FilmController {
     @DeleteMapping("/{filmId}/like/{userId}")
     public Film removeLike(@PathVariable Long filmId, @PathVariable Long userId) {
         filmService.validate(filmService.findFilmById(filmId));
-        //todo: Добавить валидацию пользователя?
+        userService.validate(userService.findUserById(userId));
         return filmService.removeLike(filmId, userId);
     }
 }
