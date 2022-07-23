@@ -75,7 +75,7 @@ public class FilmController {
     @PutMapping("/{filmId}/like/{userId}")
     public Film addLike(@PathVariable Long filmId, @PathVariable Long userId) {
         filmService.validate(filmService.findFilmById(filmId));
-        //todo: Добавить валидацию пользователя?
+        userService.validate(userService.findUserById(userId));
         return filmService.addLike(filmId, userId);
     }
 
