@@ -55,6 +55,7 @@ public class FilmService {
     }
 
     public Collection<Film> findAll() {
+        log.info("Запрос на получение всех фильмов");
         return filmStorage.findAll();
     }
 
@@ -73,7 +74,7 @@ public class FilmService {
         if (count == null || count == 0) {
             count = 10L;
         }
-        log.warn("Отправлен запрос на получение {} самых популярных фильмов", count);
+        log.info("Запрос на получение {} самых популярных фильмов", count);
         return filmStorage.findPopularFilms(count);
     }
 
@@ -81,7 +82,7 @@ public class FilmService {
         User user = userStorage.findUserById(userId);
         Film film = filmStorage.findFilmById(filmId);
 
-        log.warn("Пользователь \"{}\" поставил лайк фильму \"{}\"", user.getName(), film.getName());
+        log.info("Пользователь \"{}\" поставил лайк фильму \"{}\"", user.getName(), film.getName());
         return filmStorage.addLike(film, user);
     }
 
@@ -89,7 +90,7 @@ public class FilmService {
         User user = userStorage.findUserById(userId);
         Film film = filmStorage.findFilmById(filmId);
 
-        log.warn("Пользователь \"{}\" удалил лайк у фильма \"{}\"", user.getName(), film.getName());
+        log.info("Пользователь \"{}\" удалил лайк у фильма \"{}\"", user.getName(), film.getName());
         return filmStorage.removeLike(film, user);
     }
 
