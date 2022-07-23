@@ -14,13 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserValidationServiceTest {
     UserController controller;
-    UserValidationService userValidationService = new UserValidationService();
     UserStorage userStorage = new InMemoryUserStorage();
     UserService userService = new UserService(userStorage);
 
     @BeforeEach
     void setUp() {
-        controller = new UserController(userValidationService, userService);
+        controller = new UserController(userService);
         createTestUsers();
     }
 
@@ -34,7 +33,7 @@ class UserValidationServiceTest {
                 "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> userValidationService.validate(user3));
+        assertThrows(ValidationException.class, () -> userService.validate(user3));
         assertTrue(user3.getEmail().isBlank());
     }
 
@@ -48,7 +47,7 @@ class UserValidationServiceTest {
                 "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> userValidationService.validate(user3));
+        assertThrows(ValidationException.class, () -> userService.validate(user3));
         assertFalse(user3.getEmail().contains("@"));
     }
 
@@ -62,7 +61,7 @@ class UserValidationServiceTest {
                 "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> userValidationService.validate(user3));
+        assertThrows(ValidationException.class, () -> userService.validate(user3));
         assertTrue(user3.getLogin().isBlank());
     }
 
@@ -89,8 +88,8 @@ class UserValidationServiceTest {
 
         assertTrue(user3LoginLinesNumber > 1);
         assertTrue(user4LoginLinesNumber > 1);
-        assertThrows(ValidationException.class, () -> userValidationService.validate(user3));
-        assertThrows(ValidationException.class, () -> userValidationService.validate(user4));
+        assertThrows(ValidationException.class, () -> userService.validate(user3));
+        assertThrows(ValidationException.class, () -> userService.validate(user4));
     }
 
     @Test
@@ -118,7 +117,7 @@ class UserValidationServiceTest {
                 "user3 name"
         );
 
-        assertThrows(ValidationException.class, () -> userValidationService.validate(user3));
+        assertThrows(ValidationException.class, () -> userService.validate(user3));
         assertTrue(user3.getBirthday().isAfter(LocalDate.now()));
     }
 

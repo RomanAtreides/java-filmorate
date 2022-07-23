@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.service.UserValidationService;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,11 +23,9 @@ public class UserController {
      * Сервисы должны быть внедрены в соответствующие контроллеры.
      */
 
-    private final UserValidationService userValidationService;
     private final UserService userService;
 
-    public UserController(UserValidationService userValidationService, UserService userService) {
-        this.userValidationService = userValidationService;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -37,7 +34,7 @@ public class UserController {
     public User findUserById(@PathVariable Long userId) {
         User user = userService.findUserById(userId);
 
-        userValidationService.validate(user);
+        userService.validate(user);
         return user;
     }
 
@@ -50,14 +47,14 @@ public class UserController {
     // Создание пользователя
     @PostMapping
     public User create(@RequestBody User user) {
-        userValidationService.validate(user);
+        userService.validate(user);
         return userService.create(user);
     }
 
     // Обновление существующего в базе пользователя
     @PutMapping
     public User put(@RequestBody User user) {
-        userValidationService.validate(user);
+        userService.validate(user);
          return userService.put(user);
     }
 
@@ -67,8 +64,8 @@ public class UserController {
         User user = userService.findUserById(userId);
         User friend = userService.findUserById(friendId);
 
-        userValidationService.validate(user);
-        userValidationService.validate(friend);
+        userService.validate(user);
+        userService.validate(friend);
         userService.addFriend(user, friend);
         return friend;
     }
@@ -79,8 +76,8 @@ public class UserController {
         User user = userService.findUserById(userId);
         User friend = userService.findUserById(friendId);
 
-        userValidationService.validate(user);
-        userValidationService.validate(friend);
+        userService.validate(user);
+        userService.validate(friend);
         userService.removeFriend(user, friend);
         return friend;
     }
@@ -90,7 +87,7 @@ public class UserController {
     public List<User> findUserFriends(@PathVariable Long userId) {
         User user = userService.findUserById(userId);
 
-        userValidationService.validate(user);
+        userService.validate(user);
         return userService.findUserFriends(user);
     }
 
@@ -100,8 +97,8 @@ public class UserController {
         User user = userService.findUserById(userId);
         User other = userService.findUserById(otherId);
 
-        userValidationService.validate(user);
-        userValidationService.validate(other);
+        userService.validate(user);
+        userService.validate(other);
         return userService.findCommonFriends(user, other);
     }
 }
