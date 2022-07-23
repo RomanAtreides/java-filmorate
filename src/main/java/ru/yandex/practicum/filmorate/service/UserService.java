@@ -110,15 +110,11 @@ public class UserService {
         return commonFriends;
     }
 
-    public boolean validate(User user) {
-        boolean isValid = true;
-
+    public void validate(User user) {
         if (user == null) {
             log.warn("Попытка получить пользователя по несуществующему id");
             throw new UserNotFoundException("Пользователь с таким id не найден!");
         }
-
-        int loginLinesNumber = user.getLogin().split(" ").length;
 
         if (user.getId() < 0) {
             log.warn("Попытка добавить пользователя с отрицательным id ({})", user.getId());
@@ -130,6 +126,8 @@ public class UserService {
             throw new ValidationException(HttpStatus.BAD_REQUEST,
                     "Не указана электронная почта!");
         }
+
+        int loginLinesNumber = user.getLogin().split(" ").length;
 
         if (user.getLogin().isBlank() || loginLinesNumber > 1) {
             log.warn("Попытка добавить пользователя с неверным логином \"{}\"", user.getLogin());
@@ -148,6 +146,5 @@ public class UserService {
                     user.getLogin());
             user.setName(user.getLogin());
         }
-        return isValid;
     }
 }

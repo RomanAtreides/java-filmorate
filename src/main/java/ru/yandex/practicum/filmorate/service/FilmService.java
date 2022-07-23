@@ -88,9 +88,7 @@ public class FilmService {
         return filmStorage.removeLike(film, user);
     }
 
-    public boolean validate(Film film) {
-        boolean isValid = true;
-
+    public void validate(Film film) {
         if (film == null) {
             log.warn("Попытка получить фильм по несуществующему id");
             throw new FilmNotFoundException("Фильм с таким id не найден!");
@@ -127,6 +125,5 @@ public class FilmService {
             throw new ValidationException(HttpStatus.BAD_REQUEST,
                     "Продолжительность фильма должна быть положительной!");
         }
-        return isValid;
     }
 }
