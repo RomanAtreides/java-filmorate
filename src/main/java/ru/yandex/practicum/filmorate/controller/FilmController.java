@@ -52,18 +52,16 @@ public class FilmController {
     // Добавление нового фильма
     @PostMapping
     public Film create(@RequestBody Film film) {
-        if (filmService.validate(film)) {
-            filmService.create(film);
-        }
+        filmService.validate(film);
+        filmService.create(film);
         return film;
     }
 
     // Обновление существующего в базе фильма
     @PutMapping
     public Film put(@RequestBody Film film) {
-        if (filmService.validate(film)) {
-            filmService.put(film);
-        }
+        filmService.validate(film);
+        filmService.put(film);
         return film;
     }
 
