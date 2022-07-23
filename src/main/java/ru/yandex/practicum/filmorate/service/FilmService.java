@@ -73,6 +73,7 @@ public class FilmService {
         if (count == null || count == 0) {
             count = 10L;
         }
+        log.warn("Отправлен запрос на получение {} самых популярных фильмов", count);
         return filmStorage.findPopularFilms(count);
     }
 
