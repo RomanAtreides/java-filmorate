@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserValidationServiceTest {
+class UserServiceTest {
     UserController controller;
     UserStorage userStorage = new InMemoryUserStorage();
     UserService userService = new UserService(userStorage);
