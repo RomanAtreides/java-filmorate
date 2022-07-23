@@ -67,14 +67,7 @@ public class UserService {
     }
 
     public void addFriend(User user, User friend) {
-        if (user.getFriends() == null) {
-            user.setFriends(new LinkedHashSet<>());
-        }
         user.getFriends().add(friend.getId());
-
-        if (friend.getFriends() == null) {
-            friend.setFriends(new LinkedHashSet<>());
-        }
         friend.getFriends().add(user.getId());
     }
 
