@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface FilmStorage {
      * в которых будут определены методы добавления, удаления и модификации объектов.
      */
 
-    Film findFilmById(Integer filmId);
+    Film findFilmById(Long filmId);
 
     Collection<Film> findAll();
 
@@ -21,4 +22,8 @@ public interface FilmStorage {
     void put(Film film);
 
     List<Film> findPopularFilms(Long count);
+
+    Film addLike(Long filmId, User user);
+
+    Film removeLike(Long filmId, User user);
 }

@@ -33,7 +33,7 @@ public class UserService {
      */
 
     private final UserStorage userStorage;
-    private int userId = 0;
+    private long userId = 0;
 
     @Autowired
     public UserService(UserStorage userStorage) {

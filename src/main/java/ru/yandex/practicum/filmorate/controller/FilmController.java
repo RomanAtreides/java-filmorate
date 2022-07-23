@@ -36,7 +36,7 @@ public class FilmController {
 
     // Получение фильма по идентификатору
     @GetMapping("/{filmId}")
-    public Film findFilmById(@PathVariable Integer filmId) {
+    public Film findFilmById(@PathVariable Long filmId) {
         Film film = filmService.findFilmById(filmId);
 
         filmValidationService.validate(film);
@@ -67,10 +67,25 @@ public class FilmController {
         return film;
     }
 
-    //GET /films/popular?count={count}
     // Получение указанного количества популярных фильмов
     @GetMapping("/popular")
     public List<Film> findPopularFilms(@RequestParam(required = false) Long count) {
         return filmService.findPopularFilms(count);
+    }
+
+    // Добавление лайка фильму
+    @PutMapping("/{filmId}/like/{userId}")
+    public Film addLike(@PathVariable Long filmId, @PathVariable Long userId) {
+        filmValidationService.validate(filmService.findFilmById(filmId));
+        //todo: Добавить валидацию пользователя?
+        return filmService.addLike(filmId, userId);
+    }
+
+    // Удаление лайка
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public Film removeLike(@PathVariable Long filmId, @PathVariable Long userId) {
+        filmValidationService.validate(filmService.findFilmById(filmId));
+        //todo: Добавить валидацию пользователя?
+        return filmService.removeLike(filmId, userId);
     }
 }

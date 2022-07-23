@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,18 +33,20 @@ public class FilmService {
      */
 
     private final FilmStorage filmStorage;
-    private int filmId = 0;
+    private final UserStorage userStorage;
+    private long filmId = 0;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     private void generateFilmId(Film film) {
         film.setId(++filmId);
     }
 
-    public Film findFilmById(Integer filmId) {
+    public Film findFilmById(Long filmId) {
         return filmStorage.findFilmById(filmId);
     }
 
@@ -62,9 +66,19 @@ public class FilmService {
     }
 
     public List<Film> findPopularFilms(Long count) {
-        if (count == null) {
+        if (count == null || count == 0) {
             count = 10L;
         }
         return filmStorage.findPopularFilms(count);
+    }
+
+    public Film addLike(Long filmId, Long userId) {
+        User user = userStorage.findUserById(userId);
+        return filmStorage.addLike(filmId, user);
+    }
+
+    public Film removeLike( Long filmId, Long userId) {
+        User user = userStorage.findUserById(userId);
+        return filmStorage.removeLike(filmId, user);
     }
 }

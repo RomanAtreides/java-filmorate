@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
@@ -16,9 +18,10 @@ public class Film {
      * Таким же образом можно обеспечить условие «один пользователь — один лайк» для оценки фильмов.
      */
 
-    private int id;
+    private long id;
     private final String name;
     private final String description;
     private final LocalDate releaseDate;
     private final long duration;
+    private Set<User> likes = new HashSet<>();
 }
