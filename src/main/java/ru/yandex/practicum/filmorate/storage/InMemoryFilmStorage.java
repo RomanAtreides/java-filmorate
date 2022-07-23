@@ -44,6 +44,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public List<Film> findPopularFilms(Long count) {
         List<Film> popularFilms = new ArrayList<>(films.values());
+
         return popularFilms.stream()
                 .sorted(Comparator.comparingLong((Film film) -> film.getLikes().size()).reversed())
                 .limit(count)
@@ -53,11 +54,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addLike(Long filmId, User user) {
         Film film = films.get(filmId);
-
-        //todo: удалить блок if?
-        if (film.getLikes() == null) {
-            film.setLikes(new LinkedHashSet<>());
-        }
 
         film.getLikes().add(user);
         return film;
