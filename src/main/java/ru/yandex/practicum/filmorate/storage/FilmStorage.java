@@ -7,12 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface FilmStorage {
-    /*
-     * Архитектура.
-     * Создайте интерфейсы FilmStorage и UserStorage,
-     * в которых будут определены методы добавления, удаления и модификации объектов.
-     */
-
     Film findFilmById(Long filmId);
 
     Collection<Film> findAll();

@@ -6,12 +6,6 @@ import java.util.Collection;
 import java.util.Map;
 
 public interface UserStorage {
-    /*
-     * Архитектура.
-     * Создайте интерфейсы FilmStorage и UserStorage,
-     * в которых будут определены методы добавления, удаления и модификации объектов.
-     */
-
     Map<Long, User> getUsers();
 
     User findUserById(Long userId);
