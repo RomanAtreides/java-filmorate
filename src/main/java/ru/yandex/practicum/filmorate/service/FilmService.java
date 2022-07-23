@@ -86,7 +86,10 @@ public class FilmService {
 
     public Film removeLike( Long filmId, Long userId) {
         User user = userStorage.findUserById(userId);
-        return filmStorage.removeLike(filmId, user);
+        Film film = filmStorage.findFilmById(filmId);
+
+        log.warn("Пользователь \"{}\" удалил лайк у фильма \"{}\"", user.getName(), film.getName());
+        return filmStorage.removeLike(film, user);
     }
 
     public boolean validate(Film film) {
