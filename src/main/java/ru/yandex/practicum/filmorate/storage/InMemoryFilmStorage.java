@@ -24,8 +24,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void create(Film film) {
+    public Film create(Film film) {
         films.put(film.getId(), film);
+        return film;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         List<Film> popularFilms = new ArrayList<>(films.values());
 
         return popularFilms.stream()
-                .sorted(Comparator.comparingLong((Film film) -> film.getLikes().size()).reversed())
+                .sorted(Comparator.comparing((Film film) -> film.getLikes().size()).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
     }

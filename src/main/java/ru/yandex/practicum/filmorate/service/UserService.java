@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,12 +24,15 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
-    private void generateUserId(User user) {
-        user.setId(++userId);
+    private long generateUserId() {
+        return ++userId;
     }
 
     public User findUserById(Long userId) {
-        return userStorage.findUserById(userId);
+        User user = userStorage.findUserById(userId);
+
+        validate(user);
+        return user;
     }
 
     public Collection<User> findAll() {
@@ -36,22 +40,31 @@ public class UserService {
     }
 
     public User create(User user) {
-        generateUserId(user);
+        validate(user);
+        user.setId(generateUserId());
         log.info("Пользователь \"{}\" добавлен в базу", user.getName());
-        return userStorage.put(user);
+        return userStorage.create(user);
     }
 
     public User put(User user) {
+        validate(user);
         log.info("Данные пользователя \"{}\" обновлены", user.getName());
         return userStorage.put(user);
     }
 
-    public void addFriend(User user, User friend) {
+    public User addFriend(Long userId, Long friendId) {
+        User user = findUserById(userId);
+        User friend = findUserById(friendId);
+
         user.getFriends().add(friend.getId());
         friend.getFriends().add(user.getId());
+        return friend;
     }
 
-    public void removeFriend(User user, User friend) {
+    public User removeFriend(Long userId, Long friendId) {
+        User user = findUserById(userId);
+        User friend = findUserById(friendId);
+
         Set<Long> userFriends = user.getFriends();
         Set<Long> friendFriends = friend.getFriends();
 
@@ -63,31 +76,34 @@ public class UserService {
         }
         userFriends.remove(friend.getId());
         friendFriends.remove(user.getId());
+        return friend;
     }
 
-    public List<User> findUserFriends(User user) {
+    public List<User> findUserFriends(Long userId) {
         List<User> userFriends = new ArrayList<>();
-        Map<Long, User> users = userStorage.getUsers();
+        User user = findUserById(userId);
 
         for (Long friendId : user.getFriends()) {
-            if (users.containsKey(user.getId())) {
-                userFriends.add(users.get(friendId));
+            User friend = findUserById(friendId);
+
+            if (friend != null) {
+                userFriends.add(friend);
             }
         }
         return userFriends;
     }
 
-    public List<User> findCommonFriends(User user, User other) {
-        List<User> commonFriends = new ArrayList<>();
+    public List<User> findCommonFriends(Long userId, Long otherId) {
+        User user = findUserById(userId);
+        User other = findUserById(otherId);
+
         Set<Long> userFriends = user.getFriends();
         Set<Long> otherFriends = other.getFriends();
 
-        for (Long userFriend : userFriends) {
-            if (otherFriends.contains(userFriend)) {
-                commonFriends.add(userStorage.getUsers().get(userFriend));
-            }
-        }
-        return commonFriends;
+        return userFriends.stream()
+                .filter(u -> otherFriends.stream().anyMatch(o -> o.equals(u)))
+                .map(userStorage::findUserById)
+                .collect(Collectors.toList());
     }
 
     public void validate(User user) {

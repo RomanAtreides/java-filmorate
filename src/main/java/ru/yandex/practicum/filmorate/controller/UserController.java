@@ -19,10 +19,7 @@ public class UserController {
     // Получение пользователя по идентификатору
     @GetMapping("/{userId}")
     public User findUserById(@PathVariable Long userId) {
-        User user = userService.findUserById(userId);
-
-        userService.validate(user);
-        return user;
+        return userService.findUserById(userId);
     }
 
     // Получение списка всех пользователей
@@ -34,58 +31,36 @@ public class UserController {
     // Создание пользователя
     @PostMapping
     public User create(@RequestBody User user) {
-        userService.validate(user);
         return userService.create(user);
     }
 
     // Обновление существующего в базе пользователя
     @PutMapping
     public User put(@RequestBody User user) {
-        userService.validate(user);
          return userService.put(user);
     }
 
     // Добавление в список друзей
     @PutMapping("/{userId}/friends/{friendId}")
     public User addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
-        User user = userService.findUserById(userId);
-        User friend = userService.findUserById(friendId);
-
-        userService.validate(user);
-        userService.validate(friend);
-        userService.addFriend(user, friend);
-        return friend;
+        return userService.addFriend(userId, friendId);
     }
 
     // Удаление из друзей
     @DeleteMapping("/{userId}/friends/{friendId}")
     public User removeFriend(@PathVariable Long userId, @PathVariable Long friendId) {
-        User user = userService.findUserById(userId);
-        User friend = userService.findUserById(friendId);
-
-        userService.validate(user);
-        userService.validate(friend);
-        userService.removeFriend(user, friend);
-        return friend;
+        return userService.removeFriend(userId, friendId);
     }
 
     // Получение списка друзей пользователя
     @GetMapping("/{userId}/friends")
     public List<User> findUserFriends(@PathVariable Long userId) {
-        User user = userService.findUserById(userId);
-
-        userService.validate(user);
-        return userService.findUserFriends(user);
+        return userService.findUserFriends(userId);
     }
 
     // Получение списка общих друзей 2 пользователей
     @GetMapping("/{userId}/friends/common/{otherId}")
     public List<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
-        User user = userService.findUserById(userId);
-        User other = userService.findUserById(otherId);
-
-        userService.validate(user);
-        userService.validate(other);
-        return userService.findCommonFriends(user, other);
+        return userService.findCommonFriends(userId, otherId);
     }
 }

@@ -11,7 +11,7 @@ public interface FilmStorage {
 
     Collection<Film> findAll();
 
-    void create(Film film);
+    Film create(Film film);
 
     void put(Film film);
 

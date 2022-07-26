@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,33 +18,38 @@ import java.util.List;
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final UserService userService;
     private long filmId = 0;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, UserService userService) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
+        this.userService = userService;
     }
 
-    private void generateFilmId(Film film) {
-        film.setId(++filmId);
+    private long generateFilmId() {
+        return ++filmId;
     }
 
     public Film findFilmById(Long filmId) {
-        return filmStorage.findFilmById(filmId);
+        Film film = filmStorage.findFilmById(filmId);
+
+        validate(film);
+        return film;
     }
 
     public Collection<Film> findAll() {
         return filmStorage.findAll();
     }
 
-    public void create(Film film) {
-        generateFilmId(film);
-        filmStorage.create(film);
+    public Film create(Film film) {
+        validate(film);
+        film.setId(generateFilmId());
+        return filmStorage.create(film);
     }
 
     public void put(Film film) {
+        validate(film);
         filmStorage.put(film);
     }
 
@@ -57,15 +61,15 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
-        User user = userStorage.findUserById(userId);
-        Film film = filmStorage.findFilmById(filmId);
+        User user = userService.findUserById(userId);
+        Film film = findFilmById(filmId);
 
         return filmStorage.addLike(film, user);
     }
 
     public Film removeLike( Long filmId, Long userId) {
-        User user = userStorage.findUserById(userId);
-        Film film = filmStorage.findFilmById(filmId);
+        User user = userService.findUserById(userId);
+        Film film = findFilmById(filmId);
 
         return filmStorage.removeLike(film, user);
     }
