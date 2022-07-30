@@ -1,52 +1,66 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserValidationService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Getter
-    private final Map<Integer, User> users = new HashMap<>();
-    private final UserValidationService userValidationService = new UserValidationService();
-    private int userId = 0;
+    private final UserService userService;
 
-    private void generateUserId(User user) {
-        user.setId(++userId);
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    // Получение пользователя по идентификатору
+    @GetMapping("/{userId}")
+    public User findUserById(@PathVariable Long userId) {
+        return userService.findUserById(userId);
     }
 
     // Получение списка всех пользователей
     @GetMapping
     public Collection<User> findAll() {
-        return users.values();
+        return userService.findAll();
     }
 
     // Создание пользователя
     @PostMapping
     public User create(@RequestBody User user) {
-        if (userValidationService.validate(user)) {
-            generateUserId(user);
-            users.put(user.getId(), user);
-            log.info("Пользователь {} добавлен в базу", user.getName());
-        }
-        return user;
+        return userService.create(user);
     }
 
-    // Обновление пользователя
+    // Обновление существующего в базе пользователя
     @PutMapping
     public User put(@RequestBody User user) {
-        if (userValidationService.validate(user)) {
-            users.put(user.getId(), user);
-            log.info("Данные пользователя {} обновлены", user.getName());
-        }
-        return user;
+         return userService.put(user);
+    }
+
+    // Добавление в список друзей
+    @PutMapping("/{userId}/friends/{friendId}")
+    public User addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+        return userService.addFriend(userId, friendId);
+    }
+
+    // Удаление из друзей
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public User removeFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+        return userService.removeFriend(userId, friendId);
+    }
+
+    // Получение списка друзей пользователя
+    @GetMapping("/{userId}/friends")
+    public List<User> findUserFriends(@PathVariable Long userId) {
+        return userService.findUserFriends(userId);
+    }
+
+    // Получение списка общих друзей 2 пользователей
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public List<User> findCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+        return userService.findCommonFriends(userId, otherId);
     }
 }

@@ -5,18 +5,25 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FilmValidationServiceTest {
+class FilmServiceTest {
     FilmController controller;
-    FilmValidationService filmValidationService = new FilmValidationService();
+    FilmStorage filmStorage = new InMemoryFilmStorage();
+    UserStorage userStorage = new InMemoryUserStorage();
+    UserService userService = new UserService(userStorage);
+    FilmService filmService = new FilmService(filmStorage, userService);
 
     @BeforeEach
     void setUp() {
-        controller = new FilmController();
+        controller = new FilmController(filmService);
         createTestFilms();
     }
 
@@ -38,8 +45,8 @@ class FilmValidationServiceTest {
                 111
         );
 
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film4));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film4));
     }
 
     @Test
@@ -58,7 +65,7 @@ class FilmValidationServiceTest {
         );
 
         assertTrue(film3.getDescription().length() > 200);
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
     }
 
     @Test
@@ -72,7 +79,7 @@ class FilmValidationServiceTest {
         );
 
         assertTrue(film3.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)));
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
     }
 
     @Test
@@ -101,9 +108,9 @@ class FilmValidationServiceTest {
                 1
         );
 
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film3));
-        assertThrows(ValidationException.class, () -> filmValidationService.validate(film4));
-        assertDoesNotThrow(() -> filmValidationService.validate(film5));
+        assertThrows(ValidationException.class, () -> filmService.validate(film3));
+        assertThrows(ValidationException.class, () -> filmService.validate(film4));
+        assertDoesNotThrow(() -> filmService.validate(film5));
     }
 
     void createTestFilms() {
