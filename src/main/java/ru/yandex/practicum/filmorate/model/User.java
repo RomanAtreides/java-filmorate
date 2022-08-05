@@ -49,4 +49,8 @@ public class User {
      * Документы по разметке, которая поддерживается GitHub, лежат здесь.
      * https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images
      */
+
+    /*
+     *
+     */
 }

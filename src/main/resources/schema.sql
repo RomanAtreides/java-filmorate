@@ -10,14 +10,38 @@
  добавьте условие IF NOT EXISTS при создании таблиц и индексов.
  */
 
+-- Создание таблицы genres
 CREATE TABLE IF NOT EXISTS genres (
-    genre_id INT NOT NULL,
-    genre_name VARCHAR(30) NOT NULL,
-    CONSTRAINT genre_pkey PRIMARY KEY (genre_id)
+    genre_id INT PRIMARY KEY,
+    genre_name VARCHAR(30) NOT NULL
+    -- CONSTRAINT genre_pkey PRIMARY KEY (genre_id)
 );
 
+-- Создание таблицы ratings
 CREATE TABLE IF NOT EXISTS ratings (
-    rating_id INT NOT NULL,
-    rating_name VARCHAR(30) NOT NULL,
-    CONSTRAINT rating_pkey PRIMARY KEY (rating_id)
+    rating_id INT PRIMARY KEY,
+    rating_name VARCHAR(30) NOT NULL
+);
+
+-- Создание таблицы films
+CREATE TABLE IF NOT EXISTS films (
+    film_id INT PRIMARY KEY AUTO_INCREMENT,
+    film_name VARCHAR(100) NOT NULL,
+    description VARCHAR(200) NOT NULL,
+    release_date DATE,
+    duration REAL,
+    -- likes тип данных (set<user>)? надо ли вообще добавлять это поле?
+    genre VARCHAR(30) NOT NULL,
+    rating VARCHAR(30) NOT NULL
+);
+
+-- Создание таблицы users
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    login VARCHAR(255) NOT NULL,
+    birthday DATE,
+    user_name VARCHAR(255) NOT NULL
+    -- поле friends? надо ли добавлять? какой тип данных?
+    -- поле friendship надо ли добавлять и т.д.?
 );
