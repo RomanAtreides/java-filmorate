@@ -25,23 +25,23 @@ CREATE TABLE IF NOT EXISTS ratings (
 
 -- Создание таблицы films
 CREATE TABLE IF NOT EXISTS films (
-    film_id INT PRIMARY KEY AUTO_INCREMENT,
+    film_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     film_name VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL,
     release_date DATE,
     duration REAL,
-    -- likes тип данных (set<user>)? надо ли вообще добавлять это поле?
+    likes BIGINT NOT NULL,
     genre VARCHAR(30) NOT NULL,
     rating VARCHAR(30) NOT NULL
 );
 
 -- Создание таблицы users
 CREATE TABLE IF NOT EXISTS users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     login VARCHAR(255) NOT NULL,
     birthday DATE,
-    user_name VARCHAR(255) NOT NULL
-    -- поле friends? надо ли добавлять? какой тип данных?
-    -- поле friendship надо ли добавлять и т.д.?
+    user_name VARCHAR(255) NOT NULL,
+    friends BIGINT NOT NULL,
+    friendship BOOLEAN
 );
