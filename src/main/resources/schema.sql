@@ -26,22 +26,19 @@ CREATE TABLE IF NOT EXISTS ratings (
 -- Создание таблицы films
 CREATE TABLE IF NOT EXISTS films (
     film_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    film_name VARCHAR(100) NOT NULL,
-    description VARCHAR(200) NOT NULL,
-    release_date DATE,
-    duration REAL,
-    likes BIGINT NOT NULL,
-    genre VARCHAR(30) NOT NULL,
-    rating VARCHAR(30) NOT NULL
+    film_name VARCHAR(255) NOT NULL,
+    description VARCHAR(200),
+    release_date DATE CHECK release_date > '1895-12-28',
+    duration REAL CHECK duration > 0,
+    genre VARCHAR(30),
+    rating VARCHAR(30)
 );
 
 -- Создание таблицы users
 CREATE TABLE IF NOT EXISTS users (
     user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) NOT NULL,
-    login VARCHAR(255) NOT NULL,
-    birthday DATE,
-    user_name VARCHAR(255) NOT NULL,
-    friends BIGINT NOT NULL,
-    friendship BOOLEAN
+    email VARCHAR(255) CHECK (NOT NULL AND email LIKE '@'),
+    login VARCHAR(255) CHECK (NOT NULL AND login NOT LIKE ' '),
+    birthday DATE CHECK birthday < now(),
+    user_name VARCHAR(255)
 );
