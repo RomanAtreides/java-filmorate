@@ -38,7 +38,7 @@ public class UserDbStorage implements UserStorage {
 
     private User createUser(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
-                //resultSet.getLong("user_id"),
+                resultSet.getLong("user_id"),
                 resultSet.getString("email"),
                 resultSet.getString("login"),
                 resultSet.getDate("birthday").toLocalDate(),
