@@ -6,9 +6,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Types;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,18 +36,33 @@ public class UserDbStorage implements UserStorage {
         return users.get(userId);
     }
 
-    @Override
-    public Collection<User> findAll() {
-        return users.values();
+    private User createUser(ResultSet resultSet, int rowNum) throws SQLException {
+        return new User(
+                //resultSet.getLong("user_id"),
+                resultSet.getString("email"),
+                resultSet.getString("login"),
+                resultSet.getDate("birthday").toLocalDate(),
+                resultSet.getString("user_name")
+        );
     }
 
-    /*
-    *@Override
+    /*@Override
+    public Collection<User> findAll() {
+        Collection<User> allUsers = users.values();
+        return allUsers;
+    }*/
+    @Override
+    public Collection<User> findAll() {
+        String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users";
+        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, this::createUser);
+        return allUsers;
+    }
+
+    /*@Override
     public User create(User user) {
          users.put(user.getId(), user);
          return user;
-    }
-    */
+    }*/
     @Override
     public User create(User user) {
         String sqlQuery = "INSERT INTO users (email, login, birthday, user_name) VALUES ( ?, ?, ?, ?)";
@@ -77,13 +90,11 @@ public class UserDbStorage implements UserStorage {
         return user;
     }
 
-    /*
-    *@Override
+    /*@Override
     public User put(User user) {
         users.put(user.getId(), user);
         return user;
-    }
-    */
+    }*/
     @Override
     public User put(User user) {
         String sqlQuery = "UPDATE users SET email = ?, login = ?, birthday = ?, user_name = ? WHERE user_id = ?";
@@ -97,7 +108,7 @@ public class UserDbStorage implements UserStorage {
                 user.getId()
         );
 
-        users.put(user.getId(), user);
+        users.put(user.getId(), user); // The line from the old implementation, should be deleted
         return user;
     }
 }
