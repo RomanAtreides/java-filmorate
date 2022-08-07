@@ -55,16 +55,6 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "INSERT INTO users (email, login, birthday, user_name) VALUES ( ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        /*
-        *jdbcTemplate.update(
-                sqlQuery,
-                user.getEmail(),
-                user.getLogin(),
-                user.getBirthday(),
-                user.getName()
-        );
-        */
-
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"user_id"});
 
@@ -87,8 +77,26 @@ public class UserDbStorage implements UserStorage {
         return user;
     }
 
+    /*
+    *@Override
+    public User put(User user) {
+        users.put(user.getId(), user);
+        return user;
+    }
+    */
     @Override
     public User put(User user) {
+        String sqlQuery = "UPDATE users SET email = ?, login = ?, birthday = ?, user_name = ? WHERE user_id = ?";
+
+        jdbcTemplate.update(
+                sqlQuery,
+                user.getEmail(),
+                user.getLogin(),
+                user.getBirthday(),
+                user.getName(),
+                user.getId()
+        );
+
         users.put(user.getId(), user);
         return user;
     }
