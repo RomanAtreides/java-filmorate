@@ -31,11 +31,6 @@ public class UserDbStorage implements UserStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public User findUserById(Long userId) {
-        return users.get(userId);
-    }
-
     private User createUser(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
                 resultSet.getLong("user_id"),
@@ -44,6 +39,22 @@ public class UserDbStorage implements UserStorage {
                 resultSet.getDate("birthday").toLocalDate(),
                 resultSet.getString("user_name")
         );
+    }
+
+    /*@Override
+    public User findUserById(Long userId) {
+        return users.get(userId);
+    }*/
+    @Override
+    public User findUserById(Long userId) {
+        String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id = ?";
+
+        User user = jdbcTemplate.query(sqlQuery, this::createUser, userId).stream()
+                .findAny()
+                .orElse(null);
+
+        return user;
+        //return users.get(userId);
     }
 
     /*@Override
