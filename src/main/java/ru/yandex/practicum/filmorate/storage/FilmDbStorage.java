@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,9 +34,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film findFilmById(Long filmId) {
         String sqlQuery = "SELECT * FROM FILMS WHERE FILM_ID = ?";
-        //SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlQuery, filmId);
 
-        /*if (filmRows.next()) {
+        /*
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlQuery, filmId);
+
+        if (filmRows.next()) {
             Film film = new Film(
                     filmRows.getString("film_name"),
                     filmRows.getString("description"),
@@ -43,13 +47,32 @@ public class FilmDbStorage implements FilmStorage {
                     //filmRows.getString("genre"),
                     //filmRows.getString("rating")
             );
-        }*/
+        }
+        jdbcTemplate.query(sqlQuery, (rs, (rs, rowNum) -> makeP));
+        return films.get(filmId);
+        */
 
-        // jdbcTemplate.query(sqlQuery, (rs, (rs, rowNum) -> makeP));
+        final List<Film> films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, filmId);
 
+        if (films.size() != 1) {
+            return null;
+        }
+        return films.get(0);
+        //return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToFilm, filmId);
+    }
 
-        //return films.get(filmId);
-        return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToFilm, filmId);
+    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
+        /*return Film.builder()
+                .id(resultSet.getLong("film_id"))
+                .name(resultSet.getString("film_name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("releaseDate").toLocalDate())
+                .duration(resultSet.getLong("duration"))
+                .likes(new HashSet<>())
+                .genre(resultSet.getString("genre"))
+                .rating(resultSet.getString("rating"))
+                .build();*/
+        return null;
     }
 
     @Override

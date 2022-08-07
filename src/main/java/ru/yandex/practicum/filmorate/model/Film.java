@@ -14,6 +14,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "id")
+//@Builder
 public class Film {
     private long id;
     private final String name;
