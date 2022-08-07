@@ -1,12 +1,19 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Types;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /*
  * 1. Вам пригодятся созданные ранее интерфейсы UserStorage и FilmStorage.
@@ -16,41 +23,6 @@ import java.util.Map;
  * 2. Напишите в DAO соответствующие мапперы и методы,
  * позволяющие сохранять пользователей и фильмы в базу данных и получать их из неё.
  */
-
-/*public long saveAndReturnId(User user) {
-    String sqlQuery = "INSERT INTO users(first_name, last_name, yearly_income) VALUES (?, ?, ?)";
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    jdbcTemplate.update(connection -> {
-    PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
-    stmt.setString(1, employee.getFirstName());
-    stmt.setString(2, employee.getLastName());
-    stmt.setLong(3, employee.getYearlyIncome());
-    return stmt;
-    }, keyHolder);
-    return keyHolder.getKey().longValue();
-}*/
-
-/*@Override
-public User save(User user) {
-    String sqlQuery = "insert into USERS (EMAIL, LOGIN, USER_NAME, BIRTHDAY) values (?, ?, ?, ?)";
-
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    jdbcTemplate.update(connection -> {
-        PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"USER_ID"});
-        stmt.setString(1, user.getEmailNew());
-        stmt.setString(2, user.getLogin());
-        stmt.setString(3, user.getName());
-        final LocalDate birthday = user.getBirthday();
-        if (birthday == null) {
-            stmt.setNull(4, Types.DATE);
-        } else {
-            stmt.setDate(4, Date.valueOf(birthday));
-        }
-        return stmt;
-    }, keyHolder);
-    user.setId(keyHolder.getKey().longValue());
-    return user;
-}*/
 
 @Component("userDbStorage")
 public class UserDbStorage implements UserStorage {
@@ -71,9 +43,47 @@ public class UserDbStorage implements UserStorage {
         return users.values();
     }
 
+    /*
+    *@Override
+    public User create(User user) {
+         users.put(user.getId(), user);
+         return user;
+    }
+    */
     @Override
     public User create(User user) {
-        users.put(user.getId(), user);
+        String sqlQuery = "INSERT INTO users (email, login, birthday, user_name) VALUES ( ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        /*
+        *jdbcTemplate.update(
+                sqlQuery,
+                user.getEmail(),
+                user.getLogin(),
+                user.getBirthday(),
+                user.getName()
+        );
+        */
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"user_id"});
+
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getLogin());
+
+            final LocalDate birthday = user.getBirthday();
+
+            if (birthday == null) {
+                statement.setNull(3, Types.DATE);
+            } else {
+                statement.setDate(3, Date.valueOf(birthday));
+            }
+            statement.setString(4, user.getName());
+            return statement;
+        }, keyHolder);
+
+        user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        users.put(user.getId(), user); // The line from the old implementation, should be deleted
         return user;
     }
 
