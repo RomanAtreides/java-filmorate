@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -53,8 +54,12 @@ public User save(User user) {
 
 @Component("userDbStorage")
 public class UserDbStorage implements UserStorage {
+    private final JdbcTemplate jdbcTemplate;
     private final Map<Long, User> users = new HashMap<>();
 
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
     @Override
     public User findUserById(Long userId) {
         return users.get(userId);

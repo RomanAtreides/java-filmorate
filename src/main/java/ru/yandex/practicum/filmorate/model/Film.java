@@ -21,8 +21,8 @@ public class Film {
     private final LocalDate releaseDate;
     private final long duration;
     private Set<User> likes = new HashSet<>();
-    // private final String genre;
-    // private final String rating;
+    private String genre;
+    private String rating;
 
     /*
      * 1.

@@ -16,7 +16,7 @@ public class User {
     @NonNull
     private String name;
     private Set<Long> friends = new HashSet<>();
-    // private final boolean friendship; // unconfirmed = false, confirmed = true
+    private boolean friendship; // unconfirmed = false, confirmed = true
 
     /*
      * 1. Добавьте статус для связи «дружба» между двумя пользователями:
