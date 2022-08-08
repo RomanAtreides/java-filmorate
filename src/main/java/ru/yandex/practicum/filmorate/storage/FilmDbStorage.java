@@ -35,23 +35,23 @@ public class FilmDbStorage implements FilmStorage {
                 resultSet.getString("film_name"),
                 resultSet.getString("description"),
                 resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getLong("duration"),
-                new Genre(
+                resultSet.getLong("duration")//todo,
+                /*new Genre(
                         resultSet.getInt("genres.genre_id"),
                         resultSet.getString("genres.genre_name")
                 ),
                 new Rating(
                         resultSet.getInt("ratings.rating_id"),
                         resultSet.getString("ratings.rating_name")
-                )
+                )*/
         );
     }
 
-    /*@Override
+    @Override
     public Film findFilmById(Long filmId) {
         return films.get(filmId);
-    }*/
-    @Override
+    }
+    /*@Override
     public Film findFilmById(Long filmId) {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films WHERE film_id = ?";
 
@@ -61,18 +61,18 @@ public class FilmDbStorage implements FilmStorage {
 
         return film;
         //return films.get(filmId);
-    }
+    }*/
 
-    /*@Override
+    @Override
     public Collection<Film> findAll() {
         return films.values();
-    }*/
-    @Override
+    }
+    /*@Override
     public Collection<Film> findAll() {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films";
         Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, this::createFilm);
         return allFilms;
-    }
+    }*/
 
     /*@Override
     public Film create(Film film) {
@@ -106,11 +106,11 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 
-    /*@Override
+    @Override
     public void put(Film film) {
         films.put(film.getId(), film);
-    }*/
-    @Override
+    }
+    /*@Override
     public void put(Film film) {
         String sqlQuery = "UPDATE films SET film_name = ?, description = ?, release_date = ?, duration = ? WHERE film_id = ?";
 
@@ -124,7 +124,7 @@ public class FilmDbStorage implements FilmStorage {
         );
 
         films.put(film.getId(), film); // The line from the old implementation, should be deleted
-    }
+    }*/
 
     @Override
     public List<Film> findPopularFilms(Long count) {
