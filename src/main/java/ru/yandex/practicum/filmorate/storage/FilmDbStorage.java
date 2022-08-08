@@ -74,9 +74,24 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 
-    @Override
+    /*@Override
     public void put(Film film) {
         films.put(film.getId(), film);
+    }*/
+    @Override
+    public void put(Film film) {
+        String sqlQuery = "UPDATE films SET film_name = ?, description = ?, release_date = ?, duration = ? WHERE film_id = ?";
+
+        jdbcTemplate.update(
+                sqlQuery,
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getId()
+        );
+
+        films.put(film.getId(), film); // The line from the old implementation, should be deleted
     }
 
     @Override
