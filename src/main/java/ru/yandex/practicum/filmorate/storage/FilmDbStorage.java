@@ -54,12 +54,18 @@ public class FilmDbStorage implements FilmStorage {
                 .orElse(null);
 
         return film;
-        //return users.get(userId);
+        //return films.get(filmId);
     }
 
-    @Override
+    /*@Override
     public Collection<Film> findAll() {
         return films.values();
+    }*/
+    @Override
+    public Collection<Film> findAll() {
+        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films";
+        Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, this::createFilm);
+        return allFilms;
     }
 
     @Override
