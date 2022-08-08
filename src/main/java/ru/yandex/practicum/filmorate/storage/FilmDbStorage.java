@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -29,7 +30,14 @@ public class FilmDbStorage implements FilmStorage {
                 resultSet.getString("description"),
                 resultSet.getDate("release_date").toLocalDate(),
                 resultSet.getLong("duration"),
-                new Rating(resultSet.getInt("ratings.rating_id"), resultSet.getString("ratigns.rating_name"))
+                new Genre(
+                        resultSet.getInt("genres.genre_id"),
+                        resultSet.getString("genres.genre_name")
+                ),
+                new Rating(
+                        resultSet.getInt("ratings.rating_id"),
+                        resultSet.getString("ratings.rating_name")
+                )
         );
     }
 
