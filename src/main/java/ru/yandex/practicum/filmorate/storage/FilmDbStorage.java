@@ -29,7 +29,7 @@ public class FilmDbStorage implements FilmStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private Film createFilm(ResultSet resultSet, int rowNum) throws SQLException {
+    private Film mapToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         return new Film(
                 resultSet.getLong("film_id"),
                 resultSet.getString("film_name"),
@@ -55,7 +55,7 @@ public class FilmDbStorage implements FilmStorage {
     public Film findFilmById(Long filmId) {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films WHERE film_id = ?";
 
-        Film film = jdbcTemplate.query(sqlQuery, this::createFilm, filmId).stream()
+        Film film = jdbcTemplate.query(sqlQuery, this::mapToFilm, filmId).stream()
                 .findAny()
                 .orElse(null);
 
@@ -70,7 +70,7 @@ public class FilmDbStorage implements FilmStorage {
     /*@Override
     public Collection<Film> findAll() {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films";
-        Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, this::createFilm);
+        Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, this::mapToFilm);
         return allFilms;
     }*/
 
@@ -81,7 +81,7 @@ public class FilmDbStorage implements FilmStorage {
     }*/
     @Override
     public Film create(Film film) {
-        String sqlQuery = "INSERT INTO films (film_name, description, release_date, duration) VALUES ( ?, ?, ?, ?)";
+        String sqlQuery = "INSERT INTO films (film_name, description, release_date, duration) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

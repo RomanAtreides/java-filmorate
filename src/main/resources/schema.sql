@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS films (
     film_name VARCHAR(255) NOT NULL,
     description VARCHAR(200),
     release_date DATE CHECK release_date > '1895-12-28',
-    duration BIGINT CHECK duration > 0,
-    genre VARCHAR(30),
-    rating VARCHAR(30)
+    duration BIGINT CHECK duration > 0--,
+    --genre VARCHAR(30),
+    --rating VARCHAR(30)
 );
 
 -- Создание таблицы users
