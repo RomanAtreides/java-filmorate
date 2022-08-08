@@ -2,14 +2,20 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Getter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,9 +74,35 @@ public class FilmDbStorage implements FilmStorage {
         return allFilms;
     }
 
-    @Override
+    /*@Override
     public Film create(Film film) {
         films.put(film.getId(), film);
+        return film;
+    }*/
+    @Override
+    public Film create(Film film) {
+        String sqlQuery = "INSERT INTO films (film_name, description, release_date, duration) VALUES ( ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"film_id"});
+
+            statement.setString(1, film.getName());
+            statement.setString(2, film.getDescription());
+
+            final LocalDate releaseDate = film.getReleaseDate();
+
+            if (releaseDate == null) {
+                statement.setNull(3, Types.DATE);
+            } else {
+                statement.setDate(3, Date.valueOf(releaseDate));
+            }
+            statement.setLong(4, film.getDuration());
+            return statement;
+        }, keyHolder);
+
+        film.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        films.put(film.getId(), film); // The line from the old implementation, should be deleted
         return film;
     }
 
