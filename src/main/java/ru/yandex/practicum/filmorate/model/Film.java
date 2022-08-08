@@ -15,6 +15,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode(of = "id")
 public class Film {
+    @NonNull
     private long id;
     private final String name;
     private final String description;
@@ -22,7 +23,7 @@ public class Film {
     private final long duration;
     private Set<User> likes = new HashSet<>();
     // private final String genre;
-    // private final String rating;
+    private final Rating rating;
 
     /*
      * 1.
