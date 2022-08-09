@@ -75,8 +75,10 @@ public class FilmDbStorage implements FilmStorage {
     }*/
     @Override
     public Collection<Film> findAll() {
-        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films";
+        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, genre, rating " +
+                "FROM films";
         Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, this::mapToFilm);
+
         return allFilms;
     }
 
@@ -87,7 +89,8 @@ public class FilmDbStorage implements FilmStorage {
     }*/
     @Override
     public Film create(Film film) {
-        String sqlQuery = "INSERT INTO films (film_name, description, release_date, duration) VALUES (?, ?, ?, ?)";
+        String sqlQuery = "INSERT INTO films (film_name, description, release_date, duration, genre, rating) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -104,6 +107,8 @@ public class FilmDbStorage implements FilmStorage {
                 statement.setDate(3, Date.valueOf(releaseDate));
             }
             statement.setLong(4, film.getDuration());
+            statement.setObject(5, film.getGenre());
+            statement.setObject(6, film.getRating());
             return statement;
         }, keyHolder);
 
@@ -118,7 +123,9 @@ public class FilmDbStorage implements FilmStorage {
     }*/
     @Override
     public void put(Film film) {
-        String sqlQuery = "UPDATE films SET film_name = ?, description = ?, release_date = ?, duration = ? WHERE film_id = ?";
+        String sqlQuery = "UPDATE films " +
+                "SET film_name = ?, description = ?, release_date = ?, duration = ?, genre = ?, rating = ? " +
+                "WHERE film_id = ?";
 
         jdbcTemplate.update(
                 sqlQuery,
@@ -126,6 +133,8 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
+                film.getGenre().getGenreId(),
+                film.getRating().getRatingId(),
                 film.getId()
         );
 
