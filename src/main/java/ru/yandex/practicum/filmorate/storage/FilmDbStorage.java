@@ -47,11 +47,11 @@ public class FilmDbStorage implements FilmStorage {
         );
     }
 
-    @Override
+    /*@Override
     public Film findFilmById(Long filmId) {
         return films.get(filmId);
-    }
-    /*@Override
+    }*/
+    @Override
     public Film findFilmById(Long filmId) {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films WHERE film_id = ?";
 
@@ -61,7 +61,7 @@ public class FilmDbStorage implements FilmStorage {
 
         return film;
         //return films.get(filmId);
-    }*/
+    }
 
     /*@Override
     public Collection<Film> findAll() {
