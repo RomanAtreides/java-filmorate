@@ -106,11 +106,11 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 
-    @Override
+    /*@Override
     public void put(Film film) {
         films.put(film.getId(), film);
-    }
-    /*@Override
+    }*/
+    @Override
     public void put(Film film) {
         String sqlQuery = "UPDATE films SET film_name = ?, description = ?, release_date = ?, duration = ? WHERE film_id = ?";
 
@@ -124,7 +124,7 @@ public class FilmDbStorage implements FilmStorage {
         );
 
         films.put(film.getId(), film); // The line from the old implementation, should be deleted
-    }*/
+    }
 
     @Override
     public List<Film> findPopularFilms(Long count) {
