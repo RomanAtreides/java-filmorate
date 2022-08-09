@@ -35,15 +35,15 @@ public class FilmDbStorage implements FilmStorage {
                 resultSet.getString("film_name"),
                 resultSet.getString("description"),
                 resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getLong("duration")//todo,
-                /*new Genre(
+                resultSet.getLong("duration"),
+                new Genre(
                         resultSet.getInt("genres.genre_id"),
                         resultSet.getString("genres.genre_name")
                 ),
                 new Rating(
                         resultSet.getInt("ratings.rating_id"),
                         resultSet.getString("ratings.rating_name")
-                )*/
+                )
         );
     }
 
@@ -53,7 +53,13 @@ public class FilmDbStorage implements FilmStorage {
     }*/
     @Override
     public Film findFilmById(Long filmId) {
-        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films WHERE film_id = ?";
+        //String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films WHERE film_id = ?";
+        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, " +
+                "genres.genre_name, ratings.rating_name " +
+                "FROM films " +
+                "JOIN genres ON films.genre = genres.genre_id " +
+                "JOIN ratings ON films.rating = ratings.rating_id " +
+                "WHERE film_id = ?";
 
         Film film = jdbcTemplate.query(sqlQuery, this::mapToFilm, filmId).stream()
                 .findAny()
