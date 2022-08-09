@@ -31,7 +31,7 @@ public class UserDbStorage implements UserStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private User createUser(ResultSet resultSet, int rowNum) throws SQLException {
+    private User mapToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
                 resultSet.getLong("user_id"),
                 resultSet.getString("email"),
@@ -49,7 +49,7 @@ public class UserDbStorage implements UserStorage {
     public User findUserById(Long userId) {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id = ?";
 
-        User user = jdbcTemplate.query(sqlQuery, this::createUser, userId).stream()
+        User user = jdbcTemplate.query(sqlQuery, this::mapToUser, userId).stream()
                 .findAny()
                 .orElse(null);
 
@@ -65,7 +65,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public Collection<User> findAll() {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users";
-        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, this::createUser);
+        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, this::mapToUser);
         return allUsers;
     }
 
