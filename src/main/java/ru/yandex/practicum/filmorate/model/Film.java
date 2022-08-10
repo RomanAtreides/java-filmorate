@@ -23,7 +23,7 @@ public class Film {
     private final long duration;
     private Set<User> likes = new HashSet<>();
     private final Genre genre;
-    private final Rating rating;
+    private final Mpa mpa;
 
     /*
      * 1.

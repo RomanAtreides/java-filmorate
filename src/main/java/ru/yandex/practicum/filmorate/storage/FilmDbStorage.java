@@ -7,9 +7,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +41,7 @@ public class FilmDbStorage implements FilmStorage {
                         resultSet.getInt("genres.genre_id"),
                         resultSet.getString("genres.genre_name")
                 ),
-                new Rating(
+                new Mpa(
                         resultSet.getInt("ratings.rating_id"),
                         resultSet.getString("ratings.rating_name")
                 )
@@ -108,7 +109,7 @@ public class FilmDbStorage implements FilmStorage {
             }
             statement.setLong(4, film.getDuration());
             statement.setObject(5, film.getGenre());
-            statement.setObject(6, film.getRating());
+            statement.setObject(6, film.getMpa());
             return statement;
         }, keyHolder);
 
@@ -134,7 +135,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getReleaseDate(),
                 film.getDuration(),
                 film.getGenre().getGenreId(),
-                film.getRating().getRatingId(),
+                film.getMpa().getId(),
                 film.getId()
         );
 
