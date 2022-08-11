@@ -36,7 +36,7 @@ public class FilmDbStorage implements FilmStorage {
     public Film findFilmById(Long filmId) {
         //String sqlQuery = "SELECT film_id, film_name, description, release_date, duration FROM films WHERE film_id = ?";
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, " +
-                "genres.genre_name, ratings.rating_name " +
+                "genres.genre_id, genres.genre_name, ratings.rating_id, ratings.rating_name " +
                 "FROM films " +
                 "LEFT JOIN genres ON films.genre = genres.genre_id " +
                 "LEFT JOIN ratings ON films.rating = ratings.rating_id " +
