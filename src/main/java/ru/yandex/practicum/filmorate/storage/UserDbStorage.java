@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
@@ -31,16 +32,6 @@ public class UserDbStorage implements UserStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private User mapToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        return new User(
-                resultSet.getLong("user_id"),
-                resultSet.getString("email"),
-                resultSet.getString("login"),
-                resultSet.getDate("birthday").toLocalDate(),
-                resultSet.getString("user_name")
-        );
-    }
-
     /*@Override
     public User findUserById(Long userId) {
         return users.get(userId);
@@ -49,7 +40,7 @@ public class UserDbStorage implements UserStorage {
     public User findUserById(Long userId) {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id = ?";
 
-        User user = jdbcTemplate.query(sqlQuery, this::mapToUser, userId).stream()
+        User user = jdbcTemplate.query(sqlQuery, new UserMapper(), userId).stream()
                 .findAny()
                 .orElse(null);
 
@@ -65,7 +56,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public Collection<User> findAll() {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users";
-        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, this::mapToUser);
+        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, new UserMapper());
         return allUsers;
     }
 
