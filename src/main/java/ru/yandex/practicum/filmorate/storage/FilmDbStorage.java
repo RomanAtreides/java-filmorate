@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -12,8 +13,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
@@ -27,24 +26,6 @@ public class FilmDbStorage implements FilmStorage {
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    private Film mapToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Film(
-                resultSet.getLong("film_id"),
-                resultSet.getString("film_name"),
-                resultSet.getString("description"),
-                resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getLong("duration"),
-                new Genre(
-                        resultSet.getInt("genre_id"), //todo: Столбец "genre_id" не найден
-                        resultSet.getString("genre_name")
-                ),
-                new Mpa(
-                        resultSet.getInt("rating_id"),
-                        resultSet.getString("rating_name")
-                )
-        );
     }
 
     /*@Override
@@ -61,7 +42,7 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN ratings ON films.rating = ratings.rating_id " +
                 "WHERE film_id = ?";
 
-        Film film = jdbcTemplate.query(sqlQuery, this::mapToFilm, filmId).stream()
+        Film film = jdbcTemplate.query(sqlQuery, new FilmMapper(), filmId).stream()
                 .findAny()
                 .orElse(null);
 
@@ -77,7 +58,7 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> findAll() {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, genre, rating " +
                 "FROM films";
-        Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, this::mapToFilm);
+        Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, new FilmMapper());
 
         return allFilms;
     }
