@@ -37,7 +37,7 @@ public class FilmDbStorage implements FilmStorage {
                 resultSet.getDate("release_date").toLocalDate(),
                 resultSet.getLong("duration"),
                 new Genre(
-                        resultSet.getInt("genre_id"),
+                        resultSet.getInt("genre_id"), //todo: Столбец "genre_id" не найден
                         resultSet.getString("genre_name")
                 ),
                 new Mpa(
@@ -147,14 +147,34 @@ public class FilmDbStorage implements FilmStorage {
                 "SET film_name = ?, description = ?, release_date = ?, duration = ?, genre = ?, rating = ? " +
                 "WHERE film_id = ?";
 
+        /*jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"film_id"});
+
+
+
+            return statement;
+        });*/
+
+        Integer genre = null;
+
+        if (film.getGenre() != null) {
+            genre = film.getGenre().getId();
+        }
+
+        Integer mpa = null;
+
+        if (film.getMpa() != null) {
+            mpa = film.getMpa().getId();
+        }
+
         jdbcTemplate.update(
                 sqlQuery,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getGenre().getId(),
-                film.getMpa().getId(),
+                genre,
+                mpa,
                 film.getId()
         );
 
