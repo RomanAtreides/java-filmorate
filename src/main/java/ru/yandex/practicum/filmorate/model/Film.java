@@ -14,16 +14,16 @@ import java.util.Set;
 @RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "id")
-//@Builder
 public class Film {
+    @NonNull
     private long id;
     private final String name;
     private final String description;
     private final LocalDate releaseDate;
     private final long duration;
     private Set<User> likes = new HashSet<>();
-    private String genre;
-    private String rating;
+    private final Genre genre;
+    private final Mpa mpa;
 
     /*
      * 1.

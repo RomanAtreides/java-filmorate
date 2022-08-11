@@ -1,16 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@Builder
+//@Data
+@Getter
+@Setter
+//@AllArgsConstructor
+@RequiredArgsConstructor
+@ToString
+@EqualsAndHashCode(of = "id")
 public class User {
+    @NonNull
     private long id;
     private final String email;
     private final String login;
@@ -18,7 +22,7 @@ public class User {
     @NonNull
     private String name;
     private Set<Long> friends = new HashSet<>();
-    //private boolean friendship; // unconfirmed = false, confirmed = true
+    // private final boolean friendship; // unconfirmed = false, confirmed = true
 
     /*
      * 1. Добавьте статус для связи «дружба» между двумя пользователями:
