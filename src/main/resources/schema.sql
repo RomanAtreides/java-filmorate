@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS films (
     description VARCHAR(200),
     release_date DATE CHECK release_date > '1895-12-28',
     duration BIGINT CHECK duration > 0,
-    genre VARCHAR(30),
-    rating VARCHAR(30)
+    genre INT,
+    rating INT
 );
 
 -- Создание таблицы users

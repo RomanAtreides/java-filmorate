@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,12 +37,12 @@ public class FilmDbStorage implements FilmStorage {
                 resultSet.getDate("release_date").toLocalDate(),
                 resultSet.getLong("duration"),
                 new Genre(
-                        resultSet.getInt("genres.genre_id"),
-                        resultSet.getString("genres.genre_name")
+                        resultSet.getInt("genre_id"),
+                        resultSet.getString("genre_name")
                 ),
                 new Mpa(
-                        resultSet.getInt("ratings.rating_id"),
-                        resultSet.getString("ratings.rating_name")
+                        resultSet.getInt("rating_id"),
+                        resultSet.getString("rating_name")
                 )
         );
     }
@@ -58,8 +57,8 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, " +
                 "genres.genre_name, ratings.rating_name " +
                 "FROM films " +
-                "JOIN genres ON films.genre = genres.genre_id " +
-                "JOIN ratings ON films.rating = ratings.rating_id " +
+                "LEFT JOIN genres ON films.genre = genres.genre_id " +
+                "LEFT JOIN ratings ON films.rating = ratings.rating_id " +
                 "WHERE film_id = ?";
 
         Film film = jdbcTemplate.query(sqlQuery, this::mapToFilm, filmId).stream()
@@ -108,8 +107,28 @@ public class FilmDbStorage implements FilmStorage {
                 statement.setDate(3, Date.valueOf(releaseDate));
             }
             statement.setLong(4, film.getDuration());
-            statement.setObject(5, film.getGenre());
-            statement.setObject(6, film.getMpa());
+
+            final Genre genre = film.getGenre();
+
+            if (genre == null) {
+                //statement.setInt(5, 0);
+                statement.setNull(5, Types.INTEGER);
+                //throw new RuntimeException("Genre is null!");
+            } else {
+                statement.setInt(5, genre.getId());
+            }
+            //statement.setObject(5, film.getGenre());
+
+            final Mpa mpa = film.getMpa();
+
+            if (mpa == null) {
+                //statement.setInt(6, 0);
+                statement.setNull(6, Types.INTEGER);
+                throw new RuntimeException("Mpa is null!");
+            } else {
+                statement.setInt(6, mpa.getId());
+            }
+            //statement.setObject(6, film.getMpa());
             return statement;
         }, keyHolder);
 
@@ -134,7 +153,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getGenre().getGenreId(),
+                film.getGenre().getId(),
                 film.getMpa().getId(),
                 film.getId()
         );
