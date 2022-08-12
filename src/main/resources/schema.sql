@@ -37,8 +37,15 @@ CREATE TABLE IF NOT EXISTS films (
 -- Создание таблицы users
 CREATE TABLE IF NOT EXISTS users (
     user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) CHECK (NOT NULL AND email LIKE '@'),
-    login VARCHAR(255) CHECK (NOT NULL AND login NOT LIKE ' '),
+    email VARCHAR(255) CHECK(NOT NULL AND email LIKE '@'),
+    login VARCHAR(255) CHECK(NOT NULL AND login NOT LIKE ' '),
     birthday DATE CHECK birthday < now(),
     user_name VARCHAR(255)
+);
+
+-- Создание таблицы friends
+CREATE TABLE IF NOT EXISTS friendship (
+    user_id BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    friend_id BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT composite_key PRIMARY KEY(user_id, friend_id)
 );
