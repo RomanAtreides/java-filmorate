@@ -25,6 +25,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
+    public List<User> findCommonFriends(User user, User other) {
+        return null;
+    }
+
+    @Override
     public User create(User user) {
         users.put(user.getId(), user);
         return user;

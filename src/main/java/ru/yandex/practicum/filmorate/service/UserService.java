@@ -109,13 +109,15 @@ public class UserService {
         User user = findUserById(userId);
         User other = findUserById(otherId);
 
-        Set<Long> userFriends = user.getFriends();
+        /*Set<Long> userFriends = user.getFriends();
         Set<Long> otherFriends = other.getFriends();
 
         return userFriends.stream()
                 .filter(u -> otherFriends.stream().anyMatch(o -> o.equals(u)))
                 .map(userStorage::findUserById)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+
+        return userStorage.findCommonFriends(user, other);
     }
 
     public void validate(User user) {

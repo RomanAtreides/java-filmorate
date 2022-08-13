@@ -13,6 +13,8 @@ public interface UserStorage {
 
     List<User> findUserFriends(User user);
 
+    List<User> findCommonFriends(User user, User other);
+
     User create(User user);
 
     User put(User user);

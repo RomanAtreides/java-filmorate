@@ -65,6 +65,48 @@ public class UserDbStorage implements UserStorage {
 
     }
 
+    @Override
+    public List<User> findCommonFriends(User user, User other) {
+        String sqlQuery = "SELECT *\n" +
+                "FROM\n" +
+                "  (SELECT user_id,\n" +
+                "          email,\n" +
+                "          login,\n" +
+                "          birthday,\n" +
+                "          user_name\n" +
+                "   FROM users\n" +
+                "   WHERE user_id IN\n" +
+                "       (SELECT friend_id\n" +
+                "        FROM friendship\n" +
+                "        WHERE user_id = ?)\n" +
+                "   UNION ALL SELECT user_id,\n" +
+                "                    email,\n" +
+                "                    login,\n" +
+                "                    birthday,\n" +
+                "                    user_name\n" +
+                "   FROM users\n" +
+                "   WHERE user_id IN\n" +
+                "       (SELECT friend_id\n" +
+                "        FROM friendship\n" +
+                "        WHERE user_id = ?) )\n" +
+                "GROUP BY user_id\n" +
+                "HAVING COUNT(user_id) > 1";
+        List<User> commonFriends = jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId(), other.getId());
+        return commonFriends;
+
+        /*
+         * Select id_pk, col1, col2,col,…
+         * From table1 A
+         * Where NOT EXISTS
+         * ( select 1 from table2 B
+         * Where A.id_pk = B.id_pk
+         * and A.col1 = B.col1
+         * and A.col2 = B.col2
+         * and…
+         * );
+         */
+    }
+
     /*@Override
     public User create(User user) {
          users.put(user.getId(), user);
