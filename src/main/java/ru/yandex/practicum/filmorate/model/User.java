@@ -22,6 +22,7 @@ public class User {
     @NonNull
     private String name;
     private Set<Long> friends = new HashSet<>();
+    private Friendship friendship;
     // private final boolean friendship; // unconfirmed = false, confirmed = true
 
     /*
@@ -59,6 +60,7 @@ public class User {
     /*
      * лучше 6 dao по одному на каждую crud модель
      * на каждый интерфейс будет только 1 реализация
+     *
      * crud модель мы делаем для фильмов , для пользователей , для рейтинга , для жанров, а ещё для чего?
      * да получается 4 это минимум
      * но для дружбы и лайков лучше вынести в отдельные

@@ -8,11 +8,9 @@ import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /*
  * 1. Вам пригодятся созданные ранее интерфейсы UserStorage и FilmStorage.
@@ -58,6 +56,13 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users";
         Collection<User> allUsers = jdbcTemplate.query(sqlQuery, new UserMapper());
         return allUsers;
+    }
+
+    public List<User> findUserFriends(User user) {
+        String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id IN (SELECT friend_id FROM friendship WHERE user_id = ?)";
+        List<User> userFriends = jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId());
+        return userFriends;
+
     }
 
     /*@Override

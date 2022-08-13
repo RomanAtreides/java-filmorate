@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
@@ -18,11 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserStorage userStorage;
+    private final FriendshipStorage friendshipStorage;
     private long userId = 0;
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendshipStorage friendshipStorage) {
         this.userStorage = userStorage;
+        this.friendshipStorage = friendshipStorage;
     }
 
     private long generateUserId() {
@@ -54,12 +57,18 @@ public class UserService {
     }
 
     public User addFriend(Long userId, Long friendId) {
-        User user = findUserById(userId);
+        /*User user = findUserById(userId);
         User friend = findUserById(friendId);
 
         user.getFriends().add(friend.getId());
         friend.getFriends().add(user.getId());
-        return friend;
+        return friend;*/
+
+        if (userId < 1 || friendId < 1) {
+            throw new UserNotFoundException("id не может быть отрицательным!");
+        }
+        friendshipStorage.addFriend(userId, friendId);
+        return userStorage.findUserById(friendId);
     }
 
     public User removeFriend(Long userId, Long friendId) {
@@ -81,7 +90,7 @@ public class UserService {
     }
 
     public List<User> findUserFriends(Long userId) {
-        List<User> userFriends = new ArrayList<>();
+        /*List<User> userFriends = new ArrayList<>();
         User user = findUserById(userId);
 
         for (Long friendId : user.getFriends()) {
@@ -91,7 +100,9 @@ public class UserService {
                 userFriends.add(friend);
             }
         }
-        return userFriends;
+        return userFriends;*/
+        User user = findUserById(userId);
+        return userStorage.findUserFriends(user);
     }
 
     public List<User> findCommonFriends(Long userId, Long otherId) {

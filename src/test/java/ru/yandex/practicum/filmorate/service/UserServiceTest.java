@@ -2,9 +2,12 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendshipDbStorage;
+import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -14,8 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
     UserController controller;
+    FriendshipStorage friendshipStorage = new FriendshipDbStorage(new JdbcTemplate());
     UserStorage userStorage = new InMemoryUserStorage();
-    UserService userService = new UserService(userStorage);
+    UserService userService = new UserService(userStorage, friendshipStorage);
 
     @BeforeEach
     void setUp() {
@@ -27,6 +31,7 @@ class UserServiceTest {
     void shouldThrowExceptionIfEmailIsBlank() {
         // Пользователь с пустой почтой
         User user3 = new User(
+                0,
                 "",
                 "u3",
                 LocalDate.of(1986, 6, 6),
@@ -41,6 +46,7 @@ class UserServiceTest {
     void shouldThrowExceptionIfEmailNotContainsAtSymbol() {
         // Пользователь с почтой, которая не содержит символ @
         User user3 = new User(
+                0,
                 "user3email.com",
                 "u3",
                 LocalDate.of(1986, 6, 6),
@@ -55,6 +61,7 @@ class UserServiceTest {
     void shouldThrowExceptionIfLoginIsBlank() {
         // Пользователь с пустым логином
         User user3 = new User(
+                0,
                 "user3@email.com",
                 "",
                 LocalDate.of(1986, 6, 6),
@@ -69,6 +76,7 @@ class UserServiceTest {
     void shouldThrowExceptionIfLoginContainsSpaces() {
         // Пользователь с 1 пробелом в логине
         User user3 = new User(
+                0,
                 "user3@email.com",
                 "u 3",
                 LocalDate.of(1986, 6, 6),
@@ -77,6 +85,7 @@ class UserServiceTest {
 
         // Пользователь с 2 пробелами в логине
         User user4 = new User(
+                0,
                 "user4@email.com",
                 "u  4",
                 LocalDate.of(1987, 7, 7),
@@ -96,6 +105,7 @@ class UserServiceTest {
     void shouldReplaceNameWithLoginIfNameIsBlank() {
         // Пользователь с пустым именем
         User user3 = new User(
+                0,
                 "user3@email.com",
                 "u3",
                 LocalDate.of(1986, 6, 6),
@@ -111,6 +121,7 @@ class UserServiceTest {
     void shouldThrowExceptionIfBirthdayIsAfterNow() {
         // Пользователь с датой рождения, которая позже сегодняшнего дня
         User user3 = new User(
+                0,
                 "user3@email.com",
                 "u3",
                 LocalDate.now().plusDays(1),
@@ -123,6 +134,7 @@ class UserServiceTest {
 
     private void createTestUsers() {
         User user1 = new User(
+                0,
                 "user1@email.com",
                 "u1",
                 LocalDate.of(1984, 4, 4),
@@ -130,6 +142,7 @@ class UserServiceTest {
         );
 
         User user2 = new User(
+                0,
                 "user2@email.com",
                 "u2",
                 LocalDate.of(1985, 5, 5),
