@@ -22,7 +22,7 @@ public class Film {
     private final LocalDate releaseDate;
     private final long duration;
     private Set<User> likes = new HashSet<>();
-    private final Genre genre;
+    private final Genre genres;
     private final Mpa mpa;
 
     /*

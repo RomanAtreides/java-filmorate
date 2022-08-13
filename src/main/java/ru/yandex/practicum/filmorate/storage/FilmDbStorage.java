@@ -89,14 +89,14 @@ public class FilmDbStorage implements FilmStorage {
             }
             statement.setLong(4, film.getDuration());
 
-            final Genre genre = film.getGenre();
+            final Genre genres = film.getGenres();
 
-            if (genre == null) {
+            if (genres == null) {
                 //statement.setInt(5, 0);
                 statement.setNull(5, Types.INTEGER);
                 //throw new RuntimeException("Genre is null!");
             } else {
-                statement.setInt(5, genre.getId());
+                statement.setInt(5, genres.getId());
             }
             //statement.setObject(5, film.getGenre());
 
@@ -138,8 +138,8 @@ public class FilmDbStorage implements FilmStorage {
 
         Integer genre = null;
 
-        if (film.getGenre() != null) {
-            genre = film.getGenre().getId();
+        if (film.getGenres() != null) {
+            genre = film.getGenres().getId();
         }
 
         Integer mpa = null;
