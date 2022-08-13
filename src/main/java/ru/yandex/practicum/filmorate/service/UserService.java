@@ -75,7 +75,7 @@ public class UserService {
         User user = findUserById(userId);
         User friend = findUserById(friendId);
 
-        Set<Long> userFriends = user.getFriends();
+        /*Set<Long> userFriends = user.getFriends();
         Set<Long> friendFriends = friend.getFriends();
 
         boolean isNotFriends = userFriends == null || !userFriends.contains(friend.getId()) &&
@@ -85,7 +85,9 @@ public class UserService {
             throw new UserNotFoundException("У пользователя нет такого друга!");
         }
         userFriends.remove(friend.getId());
-        friendFriends.remove(user.getId());
+        friendFriends.remove(user.getId());*/
+
+        friendshipStorage.removeFriend(user, friend);
         return friend;
     }
 
