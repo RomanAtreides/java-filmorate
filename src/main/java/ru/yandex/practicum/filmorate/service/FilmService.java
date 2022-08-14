@@ -73,7 +73,7 @@ public class FilmService {
     }
 
     public Film removeLike( Long filmId, Long userId) {
-        User user = userService.findUserById(userId); //todo: test user to be not null
+        User user = userService.findUserById(userId);
         Film film = findFilmById(filmId);
 
         return likeStorage.removeLike(film, user);
