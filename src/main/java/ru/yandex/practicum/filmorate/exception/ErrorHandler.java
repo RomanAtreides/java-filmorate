@@ -37,4 +37,12 @@ public class ErrorHandler {
                 exception.getMessage()
         );
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleGenreNotFoundException(final GenreNotFoundException exception) {
+        return new ErrorResponse("Жанр не найден!",
+                exception.getMessage()
+        );
+    }
 }
