@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -17,11 +18,12 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
 
-@Component("filmDbStorage")
+@Repository("filmDbStorage")
 public class FilmDbStorage implements FilmStorage {
     @Getter
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

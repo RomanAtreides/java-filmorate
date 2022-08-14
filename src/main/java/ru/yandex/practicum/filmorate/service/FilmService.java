@@ -22,17 +22,12 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final LikeStorage likeStorage;
     private final UserService userService;
-    private long filmId = 0;
 
     @Autowired
     public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, UserService userService, LikeStorage likeStorage) {
         this.filmStorage = filmStorage;
         this.userService = userService;
         this.likeStorage = likeStorage;
-    }
-
-    private long generateFilmId() {
-        return ++filmId;
     }
 
     public Film findFilmById(Long filmId) {
@@ -48,7 +43,6 @@ public class FilmService {
 
     public Film create(Film film) {
         validate(film);
-        film.setId(generateFilmId());
         return filmStorage.create(film);
     }
 
