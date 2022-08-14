@@ -61,7 +61,8 @@ public class FilmDbStorage implements FilmStorage {
     }*/
     @Override
     public Collection<Film> findAll() {
-        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, rating FROM films";
+        String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, ratings.rating_id, ratings.rating_name FROM films JOIN ratings ON films.rating = ratings.rating_id";
+        //String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, rating FROM films";
         Collection<Film> allFilms = jdbcTemplate.query(sqlQuery, new FilmMapper());
 
         return allFilms;
@@ -165,12 +166,21 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> findPopularFilms(Long count) {
-        List<Film> popularFilms = new ArrayList<>(films.values());
+        /*List<Film> popularFilms = new ArrayList<>(films.values());
 
         return popularFilms.stream()
                 .sorted(Comparator.comparing((Film film) -> film.getLikes().size()).reversed())
                 .limit(count)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+
+        //String sqlQuery = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, r.rating_id, r.rating_name FROM films f JOIN ratings r ON f.rating = r.rating_id JOIN likes l ON f.film_id = l.film_id ORDER BY COUNT(l.film_id) DESC LIMIT ?";
+
+        String sqlQuery = "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration, r.rating_id, r.rating_name FROM films AS f JOIN ratings AS r ON f.rating = r.rating_id LEFT JOIN likes AS l ON f.film_id = l.film_id GROUP BY f.film_id ORDER BY COUNT(l.user_id) DESC LIMIT ?";
+
+        //String sqlQuery = "SELECT film_id, film_name, description, release_date, duration, rating FROM films";
+        List<Film> popularFilms = jdbcTemplate.query(sqlQuery, new FilmMapper(), count);
+
+        return popularFilms;
     }
 
     @Override

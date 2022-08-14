@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS films (
     description VARCHAR(200),
     release_date DATE CHECK release_date > '1895-12-28',
     duration BIGINT CHECK duration > 0,
-    --genre INT,
     rating INT
 );
 
@@ -30,11 +29,17 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS friendship (
     user_id BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     friend_id BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-    CONSTRAINT composite_key PRIMARY KEY(user_id, friend_id)
+    CONSTRAINT composite_friendship_key PRIMARY KEY(user_id, friend_id)
 );
 
 CREATE TABLE IF NOT EXISTS film_genres (
     film_id BIGINT NOT NULL REFERENCES films(film_id) ON DELETE CASCADE,
     genre_id BIGINT NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE,
     CONSTRAINT composite_film_genres_key PRIMARY KEY(film_id, genre_id)
+);
+
+CREATE TABLE IF NOT EXISTS likes (
+    film_id BIGINT NOT NULL REFERENCES films(film_id) ON DELETE CASCADE,
+    user_id BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT composite_likes_key PRIMARY KEY (film_id, user_id)
 );

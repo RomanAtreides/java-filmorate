@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,9 +19,10 @@ class FilmServiceTest {
     FilmController controller;
     FilmStorage filmStorage = new InMemoryFilmStorage();
     FriendshipStorage friendshipStorage = new FriendshipDbStorage(new JdbcTemplate());
+    LikeStorage likeStorage = new LikeDbStorage(new JdbcTemplate());
     UserStorage userStorage = new InMemoryUserStorage();
     UserService userService = new UserService(userStorage, friendshipStorage);
-    FilmService filmService = new FilmService(filmStorage, userService);
+    FilmService filmService = new FilmService(filmStorage, userService, likeStorage);
 
     @BeforeEach
     void setUp() {
@@ -36,8 +38,8 @@ class FilmServiceTest {
                 "",
                 "film3 description",
                 LocalDate.of(1986, 7, 1),
-                110,
-                new Genre(1, "genreName"),
+                110L,
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -48,7 +50,7 @@ class FilmServiceTest {
                 "film4 description",
                 LocalDate.of(1987, 8, 2),
                 111,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -70,7 +72,7 @@ class FilmServiceTest {
                 tooLongFilmDescription,
                 LocalDate.of(1986, 7, 1),
                 110,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -87,7 +89,7 @@ class FilmServiceTest {
                 "film3 description",
                 LocalDate.of(1895, 12, 27),
                 110,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -104,7 +106,7 @@ class FilmServiceTest {
                 "film3 description",
                 LocalDate.of(1986, 6, 6),
                 0,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -115,7 +117,7 @@ class FilmServiceTest {
                 "film4 description",
                 LocalDate.of(1987, 7, 7),
                 -1,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -126,7 +128,7 @@ class FilmServiceTest {
                 "film5 description",
                 LocalDate.of(1988, 8, 8),
                 1,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -142,7 +144,7 @@ class FilmServiceTest {
                 "film1 description",
                 LocalDate.of(1985, 7, 3),
                 116,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
@@ -152,7 +154,7 @@ class FilmServiceTest {
                 "film2 description",
                 LocalDate.of(1988, 1, 7),
                 118,
-                new Genre(1, "genreName"),
+                new ArrayList<>(),
                 new Mpa(1, "mpaName")
         );
 
