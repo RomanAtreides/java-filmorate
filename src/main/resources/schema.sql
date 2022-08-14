@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS friendship (
 
 CREATE TABLE IF NOT EXISTS film_genres (
     film_id BIGINT NOT NULL REFERENCES films(film_id) ON DELETE CASCADE,
-    genre_id BIGINT NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE,
-    CONSTRAINT composite_film_genres_key PRIMARY KEY(film_id, genre_id)
+    genre_id BIGINT NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE--,
+    --CONSTRAINT composite_film_genres_key PRIMARY KEY(film_id, genre_id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (
