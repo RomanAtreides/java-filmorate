@@ -18,11 +18,6 @@ public class LikeDbStorage implements LikeStorage {
         String sqlQuery = "INSERT INTO likes (film_id, user_id) VALUES (?, ?)";
 
         jdbcTemplate.update(sqlQuery, film.getId(), user.getId());
-
-        //todo: test
-        Film filmWithLike = film;
-        System.out.println("filmWithLike.getLikes().size() = " + filmWithLike.getLikes().size());
-        //todo: у фильма размер поля likes должен увеличиться на 1
     }
 
     @Override

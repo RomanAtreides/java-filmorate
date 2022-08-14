@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -19,18 +19,15 @@ public class GenreDbStorage implements GenreStorage {
     public Genre findGenreById(Integer genreId) {
         String sqlQuery = "SELECT genre_id, genre_name FROM genres WHERE genre_id = ?";
 
-        Genre genre = jdbcTemplate.query(sqlQuery, new GenreMapper(), genreId).stream()
+        return jdbcTemplate.query(sqlQuery, new GenreMapper(), genreId).stream()
                 .findAny()
                 .orElse(null);
-
-        return genre;
     }
 
     @Override
     public List<Genre> findAll() {
         String sqlQuery = "SELECT genre_id, genre_name FROM genres";
-        List<Genre> allGenres = jdbcTemplate.query(sqlQuery, new GenreMapper());
 
-        return allGenres;
+        return jdbcTemplate.query(sqlQuery, new GenreMapper());
     }
 }

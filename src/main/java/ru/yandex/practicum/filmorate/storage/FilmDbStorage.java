@@ -44,6 +44,7 @@ public class FilmDbStorage implements FilmStorage {
 
         if (film != null) {
             List<Genre> filmGenres = jdbcTemplate.query(sqlQueryToGetFilmGenres, new GenreMapper(), film.getId());
+
             film.getGenres().addAll(filmGenres);
         }
         return film;

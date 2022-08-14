@@ -12,106 +12,55 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
-/*
- * 1. Вам пригодятся созданные ранее интерфейсы UserStorage и FilmStorage.
- * Напишите для них новую имплементацию — например, UserDbStorage и FilmDbStorage.
- * Эти классы будут DAO — объектами доступа к данным.
- *
- * 2. Напишите в DAO соответствующие мапперы и методы,
- * позволяющие сохранять пользователей и фильмы в базу данных и получать их из неё.
- */
-
 @Component("userDbStorage")
 public class UserDbStorage implements UserStorage {
-    private final Map<Long, User> users = new HashMap<>();
     private final JdbcTemplate jdbcTemplate;
 
     public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    /*@Override
-    public User findUserById(Long userId) {
-        return users.get(userId);
-    }*/
     @Override
     public User findUserById(Long userId) {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id = ?";
 
-        User user = jdbcTemplate.query(sqlQuery, new UserMapper(), userId).stream()
+        return jdbcTemplate.query(sqlQuery, new UserMapper(), userId).stream()
                 .findAny()
                 .orElse(null);
-
-        return user;
-        //return users.get(userId);
     }
 
-    /*@Override
-    public Collection<User> findAll() {
-        Collection<User> allUsers = users.values();
-        return allUsers;
-    }*/
     @Override
     public Collection<User> findAll() {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users";
-        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, new UserMapper());
-        return allUsers;
+        return jdbcTemplate.query(sqlQuery, new UserMapper());
     }
 
     public List<User> findUserFriends(User user) {
-        String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id IN (SELECT friend_id FROM friendship WHERE user_id = ?)";
-        List<User> userFriends = jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId());
-        return userFriends;
-
+        String sqlQuery = "SELECT user_id, email, login, birthday, user_name " +
+                "FROM users " +
+                "WHERE user_id IN (SELECT friend_id FROM friendship WHERE user_id = ?)";
+        return jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId());
     }
 
     @Override
     public List<User> findCommonFriends(User user, User other) {
-        String sqlQuery = "SELECT *\n" +
-                "FROM\n" +
-                "  (SELECT user_id,\n" +
-                "          email,\n" +
-                "          login,\n" +
-                "          birthday,\n" +
-                "          user_name\n" +
-                "   FROM users\n" +
-                "   WHERE user_id IN\n" +
-                "       (SELECT friend_id\n" +
-                "        FROM friendship\n" +
-                "        WHERE user_id = ?)\n" +
-                "   UNION ALL SELECT user_id,\n" +
-                "                    email,\n" +
-                "                    login,\n" +
-                "                    birthday,\n" +
-                "                    user_name\n" +
-                "   FROM users\n" +
-                "   WHERE user_id IN\n" +
-                "       (SELECT friend_id\n" +
-                "        FROM friendship\n" +
-                "        WHERE user_id = ?) )\n" +
-                "GROUP BY user_id\n" +
+        String sqlQuery = "SELECT * " +
+                "FROM (SELECT user_id, email, login, birthday, user_name " +
+                "FROM users " +
+                "WHERE user_id IN (SELECT friend_id " +
+                "FROM friendship " +
+                "WHERE user_id = ?) " +
+                "UNION ALL SELECT user_id, email, login, birthday, user_name " +
+                "FROM users " +
+                "WHERE user_id IN (SELECT friend_id " +
+                "FROM friendship " +
+                "WHERE user_id = ?) ) " +
+                "GROUP BY user_id " +
                 "HAVING COUNT(user_id) > 1";
-        List<User> commonFriends = jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId(), other.getId());
-        return commonFriends;
 
-        /*
-         * Select id_pk, col1, col2,col,…
-         * From table1 A
-         * Where NOT EXISTS
-         * ( select 1 from table2 B
-         * Where A.id_pk = B.id_pk
-         * and A.col1 = B.col1
-         * and A.col2 = B.col2
-         * and…
-         * );
-         */
+        return jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId(), other.getId());
     }
 
-    /*@Override
-    public User create(User user) {
-         users.put(user.getId(), user);
-         return user;
-    }*/
     @Override
     public User create(User user) {
         String sqlQuery = "INSERT INTO users (email, login, birthday, user_name) VALUES (?, ?, ?, ?)";
@@ -135,15 +84,9 @@ public class UserDbStorage implements UserStorage {
         }, keyHolder);
 
         user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
-        users.put(user.getId(), user); // The line from the old implementation, should be deleted
         return user;
     }
 
-    /*@Override
-    public User put(User user) {
-        users.put(user.getId(), user);
-        return user;
-    }*/
     @Override
     public User put(User user) {
         String sqlQuery = "UPDATE users SET email = ?, login = ?, birthday = ?, user_name = ? WHERE user_id = ?";
@@ -156,8 +99,6 @@ public class UserDbStorage implements UserStorage {
                 user.getName(),
                 user.getId()
         );
-
-        users.put(user.getId(), user); // The line from the old implementation, should be deleted
         return user;
     }
 }
