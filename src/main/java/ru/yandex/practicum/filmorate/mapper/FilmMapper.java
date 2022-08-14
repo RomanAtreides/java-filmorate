@@ -17,10 +17,6 @@ public class FilmMapper implements RowMapper<Film> {
                 resultSet.getString("description"),
                 resultSet.getDate("release_date").toLocalDate(),
                 resultSet.getLong("duration"),
-                /*new Genre(
-                        resultSet.getInt("genre_id"),
-                        resultSet.getString("genre_name")
-                ),*/
                 new ArrayList<>(),
                 new Mpa(
                         resultSet.getInt("rating_id"),
