@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.*;
 
@@ -17,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmServiceTest {
     FilmController controller;
-    FilmStorage filmStorage = new InMemoryFilmStorage();
+    FilmStorage filmStorage = new FilmDbStorage(new JdbcTemplate());
     FriendshipStorage friendshipStorage = new FriendshipDbStorage(new JdbcTemplate());
     LikeStorage likeStorage = new LikeDbStorage(new JdbcTemplate());
-    UserStorage userStorage = new InMemoryUserStorage();
+    UserStorage userStorage = new UserDbStorage(new JdbcTemplate());
     UserService userService = new UserService(userStorage, friendshipStorage);
     FilmService filmService = new FilmService(filmStorage, userService, likeStorage);
 

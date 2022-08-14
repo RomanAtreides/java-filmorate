@@ -6,10 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FriendshipDbStorage;
-import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.*;
 
 import java.time.LocalDate;
 
@@ -18,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
     UserController controller;
     FriendshipStorage friendshipStorage = new FriendshipDbStorage(new JdbcTemplate());
-    UserStorage userStorage = new InMemoryUserStorage();
+    UserStorage userStorage = new UserDbStorage(new JdbcTemplate());
     UserService userService = new UserService(userStorage, friendshipStorage);
 
     @BeforeEach
