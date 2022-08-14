@@ -13,7 +13,7 @@ public interface FilmStorage {
 
     Film create(Film film);
 
-    void put(Film film);
+    Film put(Film film);
 
     List<Film> findPopularFilms(Long count);
 

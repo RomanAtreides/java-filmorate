@@ -52,9 +52,9 @@ public class FilmService {
         return filmStorage.create(film);
     }
 
-    public void put(Film film) {
+    public Film put(Film film) {
         validate(film);
-        filmStorage.put(film);
+        return filmStorage.put(film);
     }
 
     public List<Film> findPopularFilms(Long count) {

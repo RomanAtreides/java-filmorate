@@ -121,7 +121,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public void put(Film film) {
+    public Film put(Film film) {
         Integer mpa = null;
 
         String sqlQueryToUpdateFilm = "UPDATE films " +
@@ -153,12 +153,19 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sqlQueryToDeleteFilmGenres, film.getId());
 
         if (film.getGenres() != null) {
-            for (int i = 0; i < film.getGenres().size(); i++) {
-                jdbcTemplate.update(sqlQueryToUpdateFilmGenres, film.getId(), film.getGenres().get(i).getId());
+            Set<Genre> filmGenres = new HashSet<>(film.getGenres());
+            Genre[] genres = new Genre[filmGenres.size()];
+
+            filmGenres.toArray(genres);
+
+            for (Genre genre : genres) {
+                jdbcTemplate.update(sqlQueryToUpdateFilmGenres, film.getId(), genre.getId());
             }
         }
 
         films.put(film.getId(), film); //todo: The line from the old implementation, should be deleted
+
+        return findFilmById(film.getId());
     }
 
     @Override
