@@ -39,8 +39,7 @@ public class FilmController {
     // Обновление существующего в базе фильма
     @PutMapping
     public Film put(@RequestBody Film film) {
-        filmService.put(film);
-        return film;
+        return filmService.put(film);
     }
 
     // Получение указанного количества популярных фильмов

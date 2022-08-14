@@ -1,70 +1,68 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-/*
- * 1. Вам пригодятся созданные ранее интерфейсы UserStorage и FilmStorage.
- * Напишите для них новую имплементацию — например, UserDbStorage и FilmDbStorage.
- * Эти классы будут DAO — объектами доступа к данным.
- *
- * 2. Напишите в DAO соответствующие мапперы и методы,
- * позволяющие сохранять пользователей и фильмы в базу данных и получать их из неё.
- */
-
-@Component("userDbStorage")
+@Repository
 public class UserDbStorage implements UserStorage {
-    private final Map<Long, User> users = new HashMap<>();
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    /*@Override
-    public User findUserById(Long userId) {
-        return users.get(userId);
-    }*/
     @Override
     public User findUserById(Long userId) {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users WHERE user_id = ?";
 
-        User user = jdbcTemplate.query(sqlQuery, new UserMapper(), userId).stream()
+        return jdbcTemplate.query(sqlQuery, new UserMapper(), userId).stream()
                 .findAny()
                 .orElse(null);
-
-        return user;
-        //return users.get(userId);
     }
 
-    /*@Override
-    public Collection<User> findAll() {
-        Collection<User> allUsers = users.values();
-        return allUsers;
-    }*/
     @Override
     public Collection<User> findAll() {
         String sqlQuery = "SELECT user_id, email, login, birthday, user_name FROM users";
-        Collection<User> allUsers = jdbcTemplate.query(sqlQuery, new UserMapper());
-        return allUsers;
+        return jdbcTemplate.query(sqlQuery, new UserMapper());
     }
 
-    /*@Override
-    public User create(User user) {
-         users.put(user.getId(), user);
-         return user;
-    }*/
+    public List<User> findUserFriends(User user) {
+        String sqlQuery = "SELECT user_id, email, login, birthday, user_name " +
+                "FROM users " +
+                "WHERE user_id IN (SELECT friend_id FROM friendship WHERE user_id = ?)";
+        return jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId());
+    }
+
+    @Override
+    public List<User> findCommonFriends(User user, User other) {
+        String sqlQuery = "SELECT * " +
+                "FROM (SELECT user_id, email, login, birthday, user_name " +
+                "FROM users " +
+                "WHERE user_id IN (SELECT friend_id " +
+                "FROM friendship " +
+                "WHERE user_id = ?) " +
+                "UNION ALL SELECT user_id, email, login, birthday, user_name " +
+                "FROM users " +
+                "WHERE user_id IN (SELECT friend_id " +
+                "FROM friendship " +
+                "WHERE user_id = ?) ) " +
+                "GROUP BY user_id " +
+                "HAVING COUNT(user_id) > 1";
+
+        return jdbcTemplate.query(sqlQuery, new UserMapper(), user.getId(), other.getId());
+    }
+
     @Override
     public User create(User user) {
         String sqlQuery = "INSERT INTO users (email, login, birthday, user_name) VALUES (?, ?, ?, ?)";
@@ -88,15 +86,9 @@ public class UserDbStorage implements UserStorage {
         }, keyHolder);
 
         user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
-        users.put(user.getId(), user); // The line from the old implementation, should be deleted
         return user;
     }
 
-    /*@Override
-    public User put(User user) {
-        users.put(user.getId(), user);
-        return user;
-    }*/
     @Override
     public User put(User user) {
         String sqlQuery = "UPDATE users SET email = ?, login = ?, birthday = ?, user_name = ? WHERE user_id = ?";
@@ -109,8 +101,6 @@ public class UserDbStorage implements UserStorage {
                 user.getName(),
                 user.getId()
         );
-
-        users.put(user.getId(), user); // The line from the old implementation, should be deleted
         return user;
     }
 }

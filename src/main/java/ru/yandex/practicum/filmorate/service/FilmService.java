@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,17 +20,14 @@ import java.util.List;
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
+    private final LikeStorage likeStorage;
     private final UserService userService;
-    private long filmId = 0;
 
     @Autowired
-    public FilmService(@Qualifier("inMemoryFilmStorage") FilmStorage filmStorage, UserService userService) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, UserService userService, LikeStorage likeStorage) {
         this.filmStorage = filmStorage;
         this.userService = userService;
-    }
-
-    private long generateFilmId() {
-        return ++filmId;
+        this.likeStorage = likeStorage;
     }
 
     public Film findFilmById(Long filmId) {
@@ -45,13 +43,12 @@ public class FilmService {
 
     public Film create(Film film) {
         validate(film);
-        film.setId(generateFilmId());
         return filmStorage.create(film);
     }
 
-    public void put(Film film) {
+    public Film put(Film film) {
         validate(film);
-        filmStorage.put(film);
+        return filmStorage.put(film);
     }
 
     public List<Film> findPopularFilms(Long count) {
@@ -65,14 +62,15 @@ public class FilmService {
         User user = userService.findUserById(userId);
         Film film = findFilmById(filmId);
 
-        return filmStorage.addLike(film, user);
+        likeStorage.addLike(film, user);
+        return film;
     }
 
     public Film removeLike( Long filmId, Long userId) {
         User user = userService.findUserById(userId);
         Film film = findFilmById(filmId);
 
-        return filmStorage.removeLike(film, user);
+        return likeStorage.removeLike(film, user);
     }
 
     public void validate(Film film) {
