@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS films (
 
 CREATE TABLE IF NOT EXISTS users (
     user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) CHECK(NOT NULL AND email LIKE '@'),
-    login VARCHAR(255) CHECK(NOT NULL AND login NOT LIKE ' '),
-    birthday DATE CHECK birthday < now(),
+    email VARCHAR(255), --CHECK(NOT NULL AND email LIKE '@'),
+    login VARCHAR(255), --CHECK(NOT NULL AND login NOT LIKE ' '),
+    birthday DATE, --CHECK birthday < now(),
     user_name VARCHAR(255)
 );
 
