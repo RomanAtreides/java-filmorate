@@ -12,16 +12,16 @@ CREATE TABLE IF NOT EXISTS films (
     film_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     film_name VARCHAR(255) NOT NULL,
     description VARCHAR(200),
-    release_date DATE CHECK release_date > '1895-12-28',
-    duration BIGINT CHECK duration > 0,
+    release_date DATE,
+    duration BIGINT,
     rating INT
 );
 
 CREATE TABLE IF NOT EXISTS users (
     user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255), --CHECK(NOT NULL AND email LIKE '@'),
-    login VARCHAR(255), --CHECK(NOT NULL AND login NOT LIKE ' '),
-    birthday DATE, --CHECK birthday < now(),
+    email VARCHAR(255),
+    login VARCHAR(255),
+    birthday DATE,
     user_name VARCHAR(255)
 );
 
