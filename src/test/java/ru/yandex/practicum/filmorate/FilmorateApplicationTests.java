@@ -14,9 +14,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/*
- * Все тесты CRUD на один класс DAO.
- */
 @Slf4j
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -24,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FilmoRateApplicationTests {
 	private final UserDbStorage userStorage;
 
-	@Test //select
+	@Test
 	public void testFindUserById() {
 		Optional<User> userOptional = Optional.ofNullable(userStorage.findUserById(1L));
 
