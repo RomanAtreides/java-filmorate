@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS films (
     description VARCHAR(200),
     release_date DATE,
     duration BIGINT,
-    rating INT
+    rating INT REFERENCES ratings(rating_id)
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS friendship (
 
 CREATE TABLE IF NOT EXISTS film_genres (
     film_id BIGINT NOT NULL REFERENCES films(film_id) ON DELETE CASCADE,
-    genre_id BIGINT NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE--,
+    genre_id BIGINT NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS likes (

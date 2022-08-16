@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -19,6 +20,6 @@ public class User {
     private final LocalDate birthday;
     @NonNull
     private String name;
-    private Set<Long> friends = new HashSet<>();
-    private Friendship friendship;
+    private final Set<Long> friends = new HashSet<>();
+    private final Friendship friendship;
 }

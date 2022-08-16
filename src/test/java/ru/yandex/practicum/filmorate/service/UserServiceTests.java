@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class UserServiceTest {
+public class UserServiceTests {
     private final UserService userService;
 
     @BeforeEach
@@ -33,7 +34,8 @@ public class UserServiceTest {
                 "",
                 "u3",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -48,7 +50,8 @@ public class UserServiceTest {
                 "user3email.com",
                 "u3",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -63,7 +66,8 @@ public class UserServiceTest {
                 "user3@email.com",
                 "",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -78,7 +82,8 @@ public class UserServiceTest {
                 "user3@email.com",
                 "u 3",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         // Пользователь с 2 пробелами в логине
@@ -87,7 +92,8 @@ public class UserServiceTest {
                 "user4@email.com",
                 "u  4",
                 LocalDate.of(1987, 7, 7),
-                "user4 name"
+                "user4 name",
+                new Friendship(0, 0)
         );
 
         int user3LoginLinesNumber = user3.getLogin().split(" ").length;
@@ -107,7 +113,8 @@ public class UserServiceTest {
                 "user3@email.com",
                 "u3",
                 LocalDate.of(1986, 6, 6),
-                ""
+                "",
+                new Friendship(0, 0)
         );
 
         assertTrue(user3.getName().isBlank());
@@ -123,7 +130,8 @@ public class UserServiceTest {
                 "user3@email.com",
                 "u3",
                 LocalDate.now().plusDays(1),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -136,7 +144,8 @@ public class UserServiceTest {
                 "user1@email.com",
                 "u1",
                 LocalDate.of(1984, 4, 4),
-                "user1 name"
+                "user1 name",
+                new Friendship(0, 0)
         );
 
         User user2 = new User(
@@ -144,7 +153,8 @@ public class UserServiceTest {
                 "user2@email.com",
                 "u2",
                 LocalDate.of(1985, 5, 5),
-                "user2 name"
+                "user2 name",
+                new Friendship(0, 0)
         );
 
         userService.create(user1);

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class Film {
     private final String description;
     private final LocalDate releaseDate;
     private final long duration;
-    private Set<User> likes = new HashSet<>();
+    private final Set<User> likes = new HashSet<>();
     private final List<Genre> genres;
     private final Mpa mpa;
 }

@@ -11,17 +11,18 @@ import java.util.ArrayList;
 public class FilmMapper implements RowMapper<Film> {
     @Override
     public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Film(
-                resultSet.getLong("film_id"),
-                resultSet.getString("film_name"),
-                resultSet.getString("description"),
-                resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getLong("duration"),
-                new ArrayList<>(),
-                new Mpa(
+        return Film.builder()
+                .id(resultSet.getLong("film_id"))
+                .name(resultSet.getString("film_name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .duration(resultSet.getLong("duration"))
+                //.likes(new HashSet<>())
+                .genres(new ArrayList<>())
+                .mpa(new Mpa(
                         resultSet.getInt("rating_id"),
                         resultSet.getString("rating_name")
-                )
-        );
+                ))
+                .build();
     }
 }

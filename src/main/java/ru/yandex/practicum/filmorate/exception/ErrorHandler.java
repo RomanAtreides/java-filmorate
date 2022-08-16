@@ -45,4 +45,12 @@ public class ErrorHandler {
                 exception.getMessage()
         );
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMpaIsNullException(final MpaIsNullException exception) {
+        return new ErrorResponse("Ошибка рейтинга!",
+                exception.getMessage()
+        );
+    }
 }
