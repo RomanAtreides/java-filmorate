@@ -29,4 +29,28 @@ public class ErrorHandler {
                 exception.getMessage()
         );
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleMpaNotFoundException(final MpaNotFoundException exception) {
+        return new ErrorResponse("Рейтинг не найден!",
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleGenreNotFoundException(final GenreNotFoundException exception) {
+        return new ErrorResponse("Жанр не найден!",
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMpaIsNullException(final MpaIsNullException exception) {
+        return new ErrorResponse("Ошибка рейтинга!",
+                exception.getMessage()
+        );
+    }
 }

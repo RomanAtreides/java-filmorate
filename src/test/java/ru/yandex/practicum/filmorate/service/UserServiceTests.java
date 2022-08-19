@@ -1,25 +1,28 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controller.UserController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UserServiceTest {
-    UserController controller;
-    UserStorage userStorage = new InMemoryUserStorage();
-    UserService userService = new UserService(userStorage);
+@SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class UserServiceTests {
+    private final UserService userService;
 
     @BeforeEach
     void setUp() {
-        controller = new UserController(userService);
         createTestUsers();
     }
 
@@ -27,10 +30,12 @@ class UserServiceTest {
     void shouldThrowExceptionIfEmailIsBlank() {
         // Пользователь с пустой почтой
         User user3 = new User(
+                3,
                 "",
                 "u3",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -41,10 +46,12 @@ class UserServiceTest {
     void shouldThrowExceptionIfEmailNotContainsAtSymbol() {
         // Пользователь с почтой, которая не содержит символ @
         User user3 = new User(
+                3,
                 "user3email.com",
                 "u3",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -55,10 +62,12 @@ class UserServiceTest {
     void shouldThrowExceptionIfLoginIsBlank() {
         // Пользователь с пустым логином
         User user3 = new User(
+                3,
                 "user3@email.com",
                 "",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -69,18 +78,22 @@ class UserServiceTest {
     void shouldThrowExceptionIfLoginContainsSpaces() {
         // Пользователь с 1 пробелом в логине
         User user3 = new User(
+                3,
                 "user3@email.com",
                 "u 3",
                 LocalDate.of(1986, 6, 6),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         // Пользователь с 2 пробелами в логине
         User user4 = new User(
+                4,
                 "user4@email.com",
                 "u  4",
                 LocalDate.of(1987, 7, 7),
-                "user4 name"
+                "user4 name",
+                new Friendship(0, 0)
         );
 
         int user3LoginLinesNumber = user3.getLogin().split(" ").length;
@@ -96,14 +109,16 @@ class UserServiceTest {
     void shouldReplaceNameWithLoginIfNameIsBlank() {
         // Пользователь с пустым именем
         User user3 = new User(
+                3,
                 "user3@email.com",
                 "u3",
                 LocalDate.of(1986, 6, 6),
-                ""
+                "",
+                new Friendship(0, 0)
         );
 
         assertTrue(user3.getName().isBlank());
-        controller.create(user3);
+        userService.create(user3);
         assertEquals(user3.getLogin(), user3.getName());
     }
 
@@ -111,10 +126,12 @@ class UserServiceTest {
     void shouldThrowExceptionIfBirthdayIsAfterNow() {
         // Пользователь с датой рождения, которая позже сегодняшнего дня
         User user3 = new User(
+                3,
                 "user3@email.com",
                 "u3",
                 LocalDate.now().plusDays(1),
-                "user3 name"
+                "user3 name",
+                new Friendship(0, 0)
         );
 
         assertThrows(ValidationException.class, () -> userService.validate(user3));
@@ -123,20 +140,24 @@ class UserServiceTest {
 
     private void createTestUsers() {
         User user1 = new User(
+                1,
                 "user1@email.com",
                 "u1",
                 LocalDate.of(1984, 4, 4),
-                "user1 name"
+                "user1 name",
+                new Friendship(0, 0)
         );
 
         User user2 = new User(
+                2,
                 "user2@email.com",
                 "u2",
                 LocalDate.of(1985, 5, 5),
-                "user2 name"
+                "user2 name",
+                new Friendship(0, 0)
         );
 
-        controller.create(user1);
-        controller.create(user2);
+        userService.create(user1);
+        userService.create(user2);
     }
 }

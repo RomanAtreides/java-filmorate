@@ -7,25 +7,23 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
 public class UserService {
     private final UserStorage userStorage;
-    private long userId = 0;
+    private final FriendshipStorage friendshipStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendshipStorage friendshipStorage) {
         this.userStorage = userStorage;
-    }
-
-    private long generateUserId() {
-        return ++userId;
+        this.friendshipStorage = friendshipStorage;
     }
 
     public User findUserById(Long userId) {
@@ -41,7 +39,6 @@ public class UserService {
 
     public User create(User user) {
         validate(user);
-        user.setId(generateUserId());
         log.info("Пользователь \"{}\" добавлен в базу", user.getName());
         return userStorage.create(user);
     }
@@ -53,57 +50,31 @@ public class UserService {
     }
 
     public User addFriend(Long userId, Long friendId) {
-        User user = findUserById(userId);
-        User friend = findUserById(friendId);
-
-        user.getFriends().add(friend.getId());
-        friend.getFriends().add(user.getId());
-        return friend;
+        if (userId < 1 || friendId < 1) {
+            throw new UserNotFoundException("id не может быть отрицательным!");
+        }
+        friendshipStorage.addFriend(userId, friendId);
+        return userStorage.findUserById(friendId);
     }
 
     public User removeFriend(Long userId, Long friendId) {
         User user = findUserById(userId);
         User friend = findUserById(friendId);
 
-        Set<Long> userFriends = user.getFriends();
-        Set<Long> friendFriends = friend.getFriends();
-
-        boolean isNotFriends = userFriends == null || !userFriends.contains(friend.getId()) &&
-                friendFriends == null || !friendFriends.contains(user.getId());
-
-        if (isNotFriends) {
-            throw new UserNotFoundException("У пользователя нет такого друга!");
-        }
-        userFriends.remove(friend.getId());
-        friendFriends.remove(user.getId());
+        friendshipStorage.removeFriend(user, friend);
         return friend;
     }
 
     public List<User> findUserFriends(Long userId) {
-        List<User> userFriends = new ArrayList<>();
         User user = findUserById(userId);
-
-        for (Long friendId : user.getFriends()) {
-            User friend = findUserById(friendId);
-
-            if (friend != null) {
-                userFriends.add(friend);
-            }
-        }
-        return userFriends;
+        return userStorage.findUserFriends(user);
     }
 
     public List<User> findCommonFriends(Long userId, Long otherId) {
         User user = findUserById(userId);
         User other = findUserById(otherId);
 
-        Set<Long> userFriends = user.getFriends();
-        Set<Long> otherFriends = other.getFriends();
-
-        return userFriends.stream()
-                .filter(u -> otherFriends.stream().anyMatch(o -> o.equals(u)))
-                .map(userStorage::findUserById)
-                .collect(Collectors.toList());
+        return userStorage.findCommonFriends(user, other);
     }
 
     public void validate(User user) {
